@@ -1,5 +1,4 @@
 import PySimpleGUI as sg
-from feeder_status import *
 
 #futuramente en desarrollo cambiar inputs de texto por etiquetas,de momento coloque inputs para ver mejor organizados los elementos
 
