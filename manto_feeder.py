@@ -29,6 +29,7 @@ def app():
         [sg.HSeparator()],
         [sg.Text("CP",font=('Helvetica',15)),sg.Listbox(values=["NG","OK"],font=('Helvetica',15),size=(5,1)),sg.Text("\tBFC",font=('Helvetica',15)),sg.Listbox(values=["NG","OK"],font=('Helvetica',15),size=(5,1)),sg.Push(),sg.Text("Observaciones:\t\t",font=('Helvetica',15,'bold')),sg.Push()],
         [sg.Text("QP",font=('Helvetica',15)),sg.Listbox(values=["NG","OK"],font=('Helvetica',15),size=(5,1)),sg.Text("\tHOVER",font=('Helvetica',15)),sg.Listbox(values=["NG","OK"],font=('Helvetica',15),size=(5,1)),sg.Push(),sg.Multiline("" ,size=(50 ,5) ,no_scrollbar=True ,enable_events=True),sg.Push()],
+        [sg.Text()]
         ]
     
     # layout_inf = [
