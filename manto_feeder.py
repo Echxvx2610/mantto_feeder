@@ -132,8 +132,20 @@ def app():
             
         #Eventos de menu
         if values['-MENU-'] == "Open":
-            sg.popup('Open')
+            sg.popup_get_file("Seleccione un archivo",file_types=(("Excel files", "*.xlsx"), ("All files", "*.*")))
             
+        #notas popups
+        '''
+        sg.popup: Muestra un cuadro de diálogo emergente con un mensaje.
+        sg.popup_ok: Muestra un cuadro de diálogo emergente con un mensaje y un botón "OK".
+        sg.popup_yes_no: Muestra un cuadro de diálogo emergente con un mensaje y botones "Sí" y "No".
+        sg.popup_ok_cancel: Muestra un cuadro de diálogo emergente con un mensaje y botones "OK" y "Cancelar".
+        sg.popup_get_text: Muestra un cuadro de diálogo emergente con un campo de texto para que el usuario ingrese texto.
+        sg.popup_get_file: Muestra un cuadro de diálogo emergente para que el usuario seleccione un archivo.
+        sg.popup_get_file: Muestra un cuadro de diálogo emergente para que el usuario seleccione un archivo (añadiendo save_as=True).
+        sg.popup_get_folder: Muestra un cuadro de diálogo emergente para que el usuario seleccione una carpeta.
+        
+        '''
     window.close()  
 
 print(app.__doc__)
