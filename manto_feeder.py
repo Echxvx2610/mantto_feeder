@@ -74,7 +74,6 @@ def app():
         ]
     
     window = sg.Window('Manto Feeder Main', layout,element_justification='center')
-    window['-MENU-'].Widget.configure(justify='right')
     while True:
         event, values = window.read()
         #print(event, values)
@@ -130,7 +129,11 @@ def app():
             crear_plantilla.create_template(get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5])
             hilo = threading.Thread(target=reset,daemon=True)
             hilo.start()
-        
+            
+        #Eventos de menu
+        if values['-MENU-'] == "Open":
+            sg.popup('Open')
+            
     window.close()  
 
 print(app.__doc__)
