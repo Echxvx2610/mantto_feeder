@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 import time
 from threading import *
 import threading
+import subprocess
 
 #ingresar id solo con escanear y ejecutar despues
 
@@ -59,6 +60,11 @@ def feeder_status():
         if event == '\r':
             if len(values['-ID_feeder-']) == 9:
                 check_status()
+                #script para abrir aplicaciones .exe
+                # import subprocess
+                # ruta_programa = r'C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE'
+                # # Ejecutar el programa
+                # subprocess.run(ruta_programa)
                 hilo = threading.Thread(target=reset_status)
                 hilo.start()
             else:
