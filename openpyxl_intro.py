@@ -3,6 +3,7 @@ from openpyxl import workbook,load_workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Alignment, Border, Side
 
+# ************************************* MANIPULACION DE ARCHIVOS EXCEL *************************************
 def info():
     '''
     Estructura de uso basica:
@@ -75,40 +76,58 @@ hoja.column_dimensions["A"].width = 20
 #ajuste automatico de celda segun el texto
 hoja.column_dimensions["B"].auto_size = True
 
-#rellenar un rango de columnas(no.columna(se coloca un numero antes del numero deseado),no.columna) (en proceso)
+#************************************* Rellenar un rango de columnas *************************************
 
-'''
-columna_inicial = 7
-columna_final = 30
-#had_value = True
+# Definir el rango de columnas que deseas llenar
+columna_inicio = 'J'
+columna_fin = 'V'
+fila_inicio = 1
+fila_fin = 1
 
-for columna in range(columna_inicial, columna_final + 1):
-    letra_columna = get_column_letter(columna)
-    rango_columna = hoja[letra_columna]
-    for celda in rango_columna:
-        if celda.value == None:
-            celda.value = "OK"
-        if celda.value != "OK":
-            #had_value = False
+# Llenar el rango de columnas con la palabra "OK" (RELLENAR RANGO O CUADRO COMO EL DE OBSERVACION)
+for columna in range(ord(columna_inicio), ord(columna_fin) + 1):
+    for fila in range(fila_inicio, fila_fin + 1):
+        celda = chr(columna) + str(fila)
+        hoja[celda] = "OK"
+
+# Detenerse si encuentra una celda con datos
+columna_inicio = 'J'
+columna_fin = 'V'
+fila_inicio = 3
+fila_fin = 3
+
+# Bandera para indicar si se encuentra una celda con datos
+encontrado_datos = False
+
+# Llenar el rango de columnas con la palabra "OK"
+for columna in range(ord(columna_inicio), ord(columna_fin) + 1):
+    for fila in range(fila_inicio, fila_fin + 1):
+        celda = chr(columna) + str(fila)
+        if hoja[celda].value is None:
+            hoja[celda] = "OK"
+        else:
+            encontrado_datos = True
             break
-'''
+    if encontrado_datos:
+        break
 
-
-#Buscar un valor en una columna
+# ************************** Buscar un valor o valores en una columna ********************************
 
 # Especificar la columna en la que se realizará la búsqueda
 columna = hoja['A']  # Suponiendo que deseas buscar en la columna A
 
 # Valor a buscar
-valor_deseado = 23760055
+valor_deseado = None # valor a buscar igual a None para poder hacer un condicional que busque cualquier valor diferente de cero es decir que nos muestre todos los valores en la columna
 
 # Iterar sobre las celdas de la columna
 for celda in columna:
-    if celda.value == valor_deseado:
+    if celda.value != valor_deseado:
         fila = celda.row
-        print("Se encontró el valor en la fila:", fila)
+        print("Se encontró el valor en la fila:", fila,"con un valor de :", celda.value)
         
-        
+
+#*************************  Buscar valores en rango de columnas ************************************
+
         
 #nuevo_nombre = "MF-64_23760055.xls"
 # Guardar y cerrar el archivo
