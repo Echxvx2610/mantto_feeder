@@ -1,5 +1,5 @@
 import openpyxl
-from openpyxl import workbook
+from openpyxl import workbook,load_workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Alignment, Border, Side
 
@@ -33,14 +33,14 @@ print(info.__doc__)
 
 
 # Nombre del archivo Excel
-nombre_excel = r'PysimpleGUI\Proyectos\mantto_feeder\manto_feeder.xlsx'
+nombre_excel = r'manto_feeder.xlsx'
 
 try:
     # Intentar cargar el archivo existente
     workbook = openpyxl.load_workbook(nombre_excel)
 except FileNotFoundError:
     # Si el archivo no existe, crear uno nuevo
-    workbook = Workbook()
+    workbook = openpyxl.Workbook()
     workbook.save(nombre_excel)
 
 # Obtener la hoja de trabajo
@@ -76,20 +76,40 @@ hoja.column_dimensions["A"].width = 20
 hoja.column_dimensions["B"].auto_size = True
 
 #rellenar un rango de columnas(no.columna(se coloca un numero antes del numero deseado),no.columna) (en proceso)
-columnas = hoja.iter_cols(min_col=4, max_col=15)
-for columna in columnas:
-    celda_no_vacia = False
-    for celda in columnas:
-        if celda[0].value is None:
-            celda_no_vacia = False
-            celda[0].value = "OK"
-        elif celda[0].value is not None:
-            celda_no_vacia = True
+
+'''
+columna_inicial = 7
+columna_final = 30
+#had_value = True
+
+for columna in range(columna_inicial, columna_final + 1):
+    letra_columna = get_column_letter(columna)
+    rango_columna = hoja[letra_columna]
+    for celda in rango_columna:
+        if celda.value == None:
+            celda.value = "OK"
+        if celda.value != "OK":
+            #had_value = False
             break
-            
+'''
 
 
+#Buscar un valor en una columna
 
+# Especificar la columna en la que se realizará la búsqueda
+columna = hoja['A']  # Suponiendo que deseas buscar en la columna A
+
+# Valor a buscar
+valor_deseado = 23760055
+
+# Iterar sobre las celdas de la columna
+for celda in columna:
+    if celda.value == valor_deseado:
+        fila = celda.row
+        print("Se encontró el valor en la fila:", fila)
+        
+        
+        
 #nuevo_nombre = "MF-64_23760055.xls"
 # Guardar y cerrar el archivo
 workbook.save(nombre_excel)
