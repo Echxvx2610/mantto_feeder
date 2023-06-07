@@ -86,7 +86,8 @@ def create_template(Nombre_Tecnico, ID_Feeder, Tipo_Feeder, Fecha_Mantenimiento,
     
     #guardar workbook
     ID_feeder = hoja["B14"].value
-    nuevo_nombre = f"mantto_feeder\MF-{ID_feeder}.xlsx"
+    
+    nuevo_nombre = f"mantto_feeder\MF-{ID_feeder}_{Fecha_Mantenimiento.replace('/','_')}.xlsx"
     workbook.save(nuevo_nombre)
     workbook.close()
     
@@ -95,4 +96,4 @@ def create_template(Nombre_Tecnico, ID_Feeder, Tipo_Feeder, Fecha_Mantenimiento,
     #print(create_template().__doc__)
 
 #create_template(Nombre_Tecnico, ID_Feeder,Tipo_Feeder,Fecha_Mantenimiento, Color_Semana)
-#create_template("Cristian Mendoza", 23760056, "QP", "31/05/2023", "AZUL","Feeder con mantenimiento atrasado")
+create_template("Cristian Mendoza", 23760056, "QP", "31/05/2023", "AZUL","Feeder con mantenimiento atrasado")
