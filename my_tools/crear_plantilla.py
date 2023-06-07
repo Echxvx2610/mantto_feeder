@@ -26,7 +26,7 @@ def create_template(Nombre_Tecnico, ID_Feeder, Tipo_Feeder, Fecha_Mantenimiento,
         -Fecha de mantenimiento
         -Color de semana
     '''
-    nombre_excel = r'PysimpleGUI\Proyectos\mantto_feeder\data\MF-64_plantilla.xlsx'
+    nombre_excel = r'mantto_feeder\data\MF-64_plantilla.xlsx'
     
     try:
         # Intentar cargar el archivo existente
@@ -86,7 +86,7 @@ def create_template(Nombre_Tecnico, ID_Feeder, Tipo_Feeder, Fecha_Mantenimiento,
     
     #guardar workbook
     ID_feeder = hoja["B14"].value
-    nuevo_nombre = f"PysimpleGUI\Proyectos\mantto_feeder\MF-{ID_feeder}.xlsx"
+    nuevo_nombre = f"mantto_feeder\MF-{ID_feeder}.xlsx"
     workbook.save(nuevo_nombre)
     workbook.close()
     

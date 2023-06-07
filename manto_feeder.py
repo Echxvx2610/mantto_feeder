@@ -3,7 +3,7 @@ import time
 from threading import *
 import threading
 from my_tools import crear_plantilla
-from datetime import datetime
+from datetime import datetime, timedelta,time
 import shutil
 
 #***************************************************\\ ISSUES //***************************************************
@@ -51,15 +51,16 @@ def app():
     ]
     
     #***************************************************\\ LAYOUT //***************************************************
+    color = "ROSA"
     layout = [
         #menu
         [sg.Menu(menu_layout,key='-MENU-')],
-        [sg.Image(r'PysimpleGUI\Proyectos\mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-'),sg.Push()],
+        [sg.Image(r'mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-'),sg.Push()],
         [sg.Text('COLOR DE LA SEMANA',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('DATA\t\t',font=('Helvetica',15,'bold')),sg.Push()],
-        [sg.Input(default_text='ROSA',font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(20, 50)),sg.Button('get data', size=(6, 1), font=('Helvetica',10,"bold"), key='-TEST-'),sg.Push()],
+        [sg.Input(default_text=color,font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(20, 50)),sg.Button('get data', size=(6, 1), font=('Helvetica',10,"bold"), key='-TEST-'),sg.Push()],
         
         [sg.Text('ID_Feeder',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('\tCOLOR:',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('TECNICO  \t\t\t',font=('Helvetica',15,'bold')),sg.Push()],
-        [sg.Input(font=('Helvetica',15),key='-ID_FEEDER-', size=(20, 50),readonly=True),sg.Push(),sg.Input(font=('Helvetica',15),key='-COLOR-', size=(10, 20),readonly=True),sg.Push(),sg.Input(default_text='',font=('Helvetica',15),key='-TECH-', size=(38, 80))],
+        [sg.Input(font=('Helvetica',15),key='-ID_FEEDER-', size=(20, 50),readonly=True),sg.Push(),sg.Input(default_text=color,font=('Helvetica',15),key='-COLOR-', size=(10, 20),readonly=True),sg.Push(),sg.Input(default_text='',font=('Helvetica',15),key='-TECH-', size=(38, 80))],
         
         [sg.Text('FEEDER \t\t',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CODIGO',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CALIBRACION',font=('Helvetica',15,'bold')),sg.Push(),sg.Push(),sg.Push()],
         [sg.Input(font=('Helvetica',15),key='-DATA-', size=(21, 50),readonly=True),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True),sg.Push(),sg.Push(),sg.Canvas(background_color='gray',size=(150,50),key='-CANVAC-'),sg.Push(),sg.Push(),sg.Push(),sg.Push(),sg.Push(),sg.Push()],
@@ -134,7 +135,7 @@ def app():
         if values['-MENU-'] == "Open":
             sg.popup_get_file("Seleccione un archivo",file_types=(("Excel files", "*.xlsx"), ("All files", "*.*")))
             
-        #notas popups
+        #************************************** \\ Notas popups //************************************
         '''
         sg.popup: Muestra un cuadro de diálogo emergente con un mensaje.
         sg.popup_ok: Muestra un cuadro de diálogo emergente con un mensaje y un botón "OK".
