@@ -10,6 +10,8 @@ pd.set_option('display.width', None)
 
 data = pd.read_csv(r'PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv',encoding='ISO-8859-1',usecols=['serie','feeder'])
 df = pd.DataFrame(data)
+df.rename(columns={'serie':'ID_feeder'},inplace=True)
+df.rename(columns={'feeder':'Feeder'},inplace=True)
 
 def search_id(ID_FEEDER:int):
     '''
@@ -18,13 +20,6 @@ def search_id(ID_FEEDER:int):
     mediante el escaneo de los feeders.
     '''
     #buscar feeder por id
-    if ID_FEEDER in df['serie'].values:
-        resultado = df.loc[df['serie'] == ID_FEEDER].to_string(index = False)
-        print(resultado)
-    else:
-        print('no existe')
-    
-    
-
-#search_id(104554705)
-
+    if ID_FEEDER in df['ID_feeder'].values:
+        resultado = df.loc[df['ID_feeder'] == ID_FEEDER].to_string(index = False)
+        return resultado

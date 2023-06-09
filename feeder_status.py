@@ -4,6 +4,7 @@ from threading import *
 import threading
 import subprocess
 import asyncio
+from my_tools import search_feeder
 
 #Reto: ingresar id solo con escanear y ejecutar despues
 
@@ -28,16 +29,20 @@ def feeder_status():
     async def check_status():
         '''
         Check status():
-            revisa el estadis del feeder y actualiza el valor del background_color del canvas
+            revisa el estado del feeder y actualiza el valor del background_color del canvas
             **hace una consulta en el registro excel de los feeders
         
         '''
-        window['-CANVA-'].update(background_color='lawn green')
-        await asyncio.sleep(0.5)
-        window['-ID_feeder-'].update('')
-        
-    
-    
+        #buscar feeder por id
+        resultado = search_feeder.search_id(int(values['-ID_feeder-']))
+        if resultado is not None:
+            window["-STATUS-"].update(resultado)
+            window["-CANVA-"].update(background_color='lawn green')
+            window["-ID_feeder-"].update('')
+            await asyncio.sleep(0.5)    
+        if resultado is None:
+            asyncio.run(reset_status())
+            sg.popup('Feeder no encontrado!!')
     async def reset_status():
         '''
         reset status():
@@ -48,6 +53,7 @@ def feeder_status():
         window['-CANVA-'].update(background_color='red')
         await asyncio.sleep(0.5)
         window['-ID_feeder-'].update('')
+        window['-STATUS-'].update('')
     
     
     
@@ -56,10 +62,11 @@ def feeder_status():
     
     layout = [
         #[sg.Text('Feder Status',font=('Oswald',20))],
-        [sg.Image(r'img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-')],
-        [sg.Text('ID_feeder:',font=('Helvetica',15)),sg.Input(key='-ID_feeder-',size=(20,50),enable_events=True)],
-        [sg.Text("Datos Feeder: no disponible aun",key='--')],
-        [sg.Canvas(background_color='black',size=(300,300),key='-CANVA-')],
+        [sg.Image(r'PysimpleGUI\Proyectos\mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-')],
+        [sg.Text('ID_feeder:',font=('Avenir Next LT Pro Demi',15)),sg.Input(key='-ID_feeder-',size=(20,50),enable_events=True)],
+        [sg.Text("Datos Feeder:",font=('Avenir Next LT Pro Demi',12,'bold'))],
+        [sg.Text('',font=('Avenir Next LT Pro Demi',9,'bold'),key='-STATUS-')],
+        [sg.Canvas(background_color='gray',size=(300,300),key='-CANVA-',border_width=25)],
         ]
     
     window = sg.Window('Mantto Feeder Status', layout,element_justification='center',return_keyboard_events=True)
@@ -70,18 +77,12 @@ def feeder_status():
             break
         
         #***********************************\\ Pruebas con scanner //***********************************
-        
-        #EVENTO PARA BUSCAR EL ESTADO DEL FEEDER(INCORPORAR LECTURA DE EXCEL EN LUGAR DE LISTA)
-        lista_feeders = ["104554539","104554540","104554541","104554542","104554543","105372565"]
         try:
             if len(values['-ID_feeder-']) == 9:
-                if values['-ID_feeder-'] in lista_feeders:
                     asyncio.run(check_status())
-            if len(values['-ID_feeder-']) == 9:
-                if values['-ID_feeder-'] not in lista_feeders:
-                    asyncio.run(reset_status())
         except:
             print("Error")
+            
         '''
         if event == '\r':
             if len(values['-ID_feeder-']) == 9:
