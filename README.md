@@ -17,8 +17,6 @@ un feeder o alimentadora es una herramienta la cual se une o conecta las maquina
 *Feeder status app*
 
 ![image](https://github.com/Echxvx2610/mantto_feeder/assets/99057175/bc902995-8b38-46ec-a1f1-18a623767d72)
-<<<<<<< HEAD
-=======
 
 *logo Navico group ©️2023
->>>>>>> 1b3516ba979c72ff07e927d26d956f6677b47337
+
