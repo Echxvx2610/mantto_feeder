@@ -56,7 +56,7 @@ def feeder_status():
     
     layout = [
         #[sg.Text('Feder Status',font=('Oswald',20))],
-        [sg.Image(r'mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-')],
+        [sg.Image(r'img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-')],
         [sg.Text('ID_feeder:',font=('Helvetica',15)),sg.Input(key='-ID_feeder-',size=(20,50),enable_events=True)],
         [sg.Text("Datos Feeder: no disponible aun",key='--')],
         [sg.Canvas(background_color='black',size=(300,300),key='-CANVA-')],
