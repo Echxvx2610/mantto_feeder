@@ -135,7 +135,7 @@ def app():
         if values['-MENU-'] == "Open":
             sg.popup_get_file("Seleccione un archivo",file_types=(("Excel files", "*.xlsx"), ("All files", "*.*")))
             
-        #************************************** \\ Notas popups //************************************
+        #************************************** \\ Notas sobre popups //************************************
         '''
         sg.popup: Muestra un cuadro de diálogo emergente con un mensaje.
         sg.popup_ok: Muestra un cuadro de diálogo emergente con un mensaje y un botón "OK".

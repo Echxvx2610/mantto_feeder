@@ -2,6 +2,7 @@ import openpyxl
 from openpyxl import workbook,load_workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Alignment, Border, Side
+from datetime import datetime
 
 # ************************************* MANIPULACION DE ARCHIVOS EXCEL *************************************
 def info():
@@ -34,7 +35,7 @@ print(info.__doc__)
 
 
 # Nombre del archivo Excel
-nombre_excel = r'manto_feeder.xlsx'
+nombre_excel = r'PysimpleGUI\Proyectos\mantto_feeder\manto_feeder.xlsx'
 
 try:
     # Intentar cargar el archivo existente
@@ -90,6 +91,7 @@ for columna in range(ord(columna_inicio), ord(columna_fin) + 1):
         celda = chr(columna) + str(fila)
         hoja[celda] = "OK"
 
+#************************** Rellenar un rango de columnas *************************************
 # Detenerse si encuentra una celda con datos
 columna_inicio = 'J'
 columna_fin = 'V'
@@ -111,7 +113,7 @@ for columna in range(ord(columna_inicio), ord(columna_fin) + 1):
     if encontrado_datos:
         break
 
-# ************************** Buscar un valor o valores en una columna ********************************
+# ************************** Buscar un valor o valores en una columna o fila ********************************
 
 # Especificar la columna en la que se realizará la búsqueda
 columna = hoja['A']  # Suponiendo que deseas buscar en la columna A
@@ -123,14 +125,50 @@ valor_deseado = None # valor a buscar igual a None para poder hacer un condicion
 for celda in columna:
     if celda.value != valor_deseado:
         fila = celda.row
-        print("Se encontró el valor en la fila:", fila,"con un valor de :", celda.value)
+        valor = str(celda.value).replace("00:00:00","")
+        print("Valor encontrado en la fila:",fila,"con un valor de:",valor.replace("-","/"))
         
 
-#*************************  Buscar valores en rango de columnas ************************************
+#*************************  Buscar valores en rango de columnas************************************
+columna_inicio = 'J'
+columna_fin = 'Z'
+fila_inicio = 5
+fila_fin = 5
 
-        
+# Bandera para indicar si se encuentra una celda con datos
+encontrado_datos = False
+
+#busqueda de valores
+for columna in range(ord(columna_inicio), ord(columna_fin) + 1):
+    for fila in range(fila_inicio, fila_fin + 1):
+        celda = chr(columna) + str(fila)
+        if hoja[celda].value is None:
+            None
+        else:
+            encontrado_datos = True
+            valor = str(hoja[celda].value).replace("00:00:00","")
+            print("Se encontró el valor en la fila:",fila,"con un valor de :", valor.replace("-","/"))
+
+
+#**************************** rellenar la interseccion de una fila con una columna ************************
+# Definir fila y columna
+fila = 6
+columna = 'J'
+
+# Calcular la intersección
+columna_interseccion = chr(ord(columna))
+fila_interseccion = str(int(fila))
+
+# Obtener la referencia de la celda de intersección
+celda_interseccion = hoja[columna_interseccion + fila_interseccion]
+
+# Asignar un valor a la celda de intersección
+celda_interseccion.value = "OK"
+
+
+#***************************** GUARDAR Y CERRAR ARCHIVO ****************************     
 #nuevo_nombre = "MF-64_23760055.xls"
 # Guardar y cerrar el archivo
-workbook.save(nombre_excel)
+workbook.save("PysimpleGUI\Proyectos\mantto_feeder\MF-64_23760055.xlsx")
 workbook.close()
 
