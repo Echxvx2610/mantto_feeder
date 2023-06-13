@@ -4,7 +4,7 @@ import pandas as pd
 import openpyxl
 from openpyxl import workbook,load_workbook
 from openpyxl.utils import get_column_letter
-
+from datetime import datetime,time
 #*********************** Configuracion de dataframe(muestra todo el dataframe)********************
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
@@ -28,6 +28,8 @@ def search_id(ID_FEEDER:int):
     #buscar feeder por id
     if ID_FEEDER in df['ID_feeder'].values:
         resultado = df.loc[df['ID_feeder'] == ID_FEEDER].to_string(index = False)
+        valor_feeder = ID_FEEDER
+        indice_feeder = int(df['ID_feeder'].index[df['ID_feeder']==valor_feeder][0])
         return resultado
 
 
@@ -52,7 +54,10 @@ with open('PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') 
     df = pd.DataFrame(valores_rango)
     print(df)
     '''
-    print(df.index)
+    fecha_actual = datetime.now().strftime('%m-%d-%Y').replace('-','/')
+    data_fecha = pd.DataFrame(valores_rango)
+    print(data_fecha)
+    valor_fecha = fecha_actual
     
     
 #if __name__ == '__main__':
