@@ -42,11 +42,18 @@ with open('PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') 
     
     # Obtiene los valores del rango A1:H1
     valores_rango = primera_fila[0:1502]  # Índices de columna del rango (0 a 7)
-    
+    '''
     # Imprime los valores del rango
     for valor in valores_rango:
         print(valor)
     
+
     #crear dataframe con los valores obtenidos del csv    
     df = pd.DataFrame(valores_rango)
     print(df)
+    '''
+    print(df.index)
+    
+    
+#if __name__ == '__main__':
+ #   search_id(int(values['-ID_feeder-']))

@@ -83,6 +83,17 @@ def feeder_status():
         except:
             print("Error")
             
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         '''
         if event == '\r':
             if len(values['-ID_feeder-']) == 9:
