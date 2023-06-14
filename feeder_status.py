@@ -1,8 +1,6 @@
+#-*- coding: utf-8 -*-
 import PySimpleGUI as sg
 import time
-from threading import *
-import threading
-import subprocess
 import asyncio
 from my_tools import search_feeder
 
