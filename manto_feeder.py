@@ -1,9 +1,10 @@
+#-*- coding: utf-8 -*-
 import PySimpleGUI as sg
-import time
+from time import sleep, time
 from threading import *
 import threading
 from my_tools import crear_plantilla
-from datetime import datetime, timedelta,time
+from datetime import datetime,timedelta,time
 import shutil
 
 #***************************************************\\ ISSUES //***************************************************
@@ -60,7 +61,7 @@ def app():
         [sg.Input(default_text=color,font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(20, 50)),sg.Button('get data', size=(6, 1), font=('Helvetica',10,"bold"), key='-TEST-'),sg.Push()],
         
         [sg.Text('ID_Feeder',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('\tCOLOR:',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('TECNICO  \t\t\t',font=('Helvetica',15,'bold')),sg.Push()],
-        [sg.Input(font=('Helvetica',15),key='-ID_FEEDER-', size=(20, 50),readonly=True),sg.Push(),sg.Input(default_text=color,font=('Helvetica',15),key='-COLOR-', size=(10, 20),readonly=True),sg.Push(),sg.Input(default_text='',font=('Helvetica',15),key='-TECH-', size=(38, 80))],
+        [sg.Input(font=('Helvetica',15),key='-ID_FEEDER-', size=(20, 50),readonly=True),sg.Push(),sg.Input(default_text=color,font=('Helvetica',15),key='-COLOR-', size=(10, 20),readonly=True),sg.Push(),sg.Combo(values=["Francisco Rodriguez","Yamcha Cota","Efrain Ramirez"],font=('Helvetica',15),size=(40,1),key='-TECH-',enable_events=True,readonly=True)],
         
         [sg.Text('FEEDER \t\t',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CODIGO',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CALIBRACION',font=('Helvetica',15,'bold')),sg.Push(),sg.Push(),sg.Push()],
         [sg.Input(font=('Helvetica',15),key='-DATA-', size=(21, 50),readonly=True),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True),sg.Push(),sg.Push(),sg.Canvas(background_color='gray',size=(150,50),key='-CANVAC-'),sg.Push(),sg.Push(),sg.Push(),sg.Push(),sg.Push(),sg.Push()],
@@ -74,7 +75,7 @@ def app():
         [sg.Text("Created by:Cristian Echevarria",font=('Helvetica',6,'italic'))],
         ]
     
-    window = sg.Window('Manto Feeder Main', layout,element_justification='center')
+    window = sg.Window('Manto Feeder Main', layout,element_justification='center',return_keyboard_events=True)
     while True:
         event, values = window.read()
         #print(event, values)
@@ -134,6 +135,7 @@ def app():
         #Eventos de menu
         if values['-MENU-'] == "Open":
             sg.popup_get_file("Seleccione un archivo",file_types=(("Excel files", "*.xlsx"), ("All files", "*.*")))
+            
             
         #************************************** \\ Notas sobre popups //************************************
         '''
