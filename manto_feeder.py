@@ -1,11 +1,11 @@
 #-*- coding: utf-8 -*-
 import PySimpleGUI as sg
-from time import sleep, time
 from threading import *
 import threading
 from my_tools import crear_plantilla
 from datetime import datetime,timedelta,time
 import shutil
+import time
 
 #***************************************************\\ ISSUES //***************************************************
             #-->Futuramente en desarrollo cambiar inputs de texto por etiquetas,de momento coloque inputs para ver mejor organizados los elementos

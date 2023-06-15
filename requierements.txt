@@ -1,0 +1,4 @@
+ PySimpleGUI v4.60.4
+ openpyxl v3.0.10
+ pandas v1.3.5
+ 
