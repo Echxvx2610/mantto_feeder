@@ -51,8 +51,7 @@ def app():
     ]
     
     # *************************************************\\ INTERSECCION DE COLUMNAS //***************************************************
-    
-    color = 'black'
+    color = 'ROSA'
     #***************************************************\\ LAYOUT //***************************************************
     layout = [
         #menu
@@ -85,7 +84,14 @@ def app():
         
         #*************\\ Funciones //*************
         
+        
+        
+        
         def reset():
+            '''
+            reset():
+                Establece el color de los canvas a gris asi como el de los inputs en blanco
+            '''
             time.sleep(2)
             window['-DATA-'].update('')
             window['-ID_FEEDER-'].update('')
@@ -96,6 +102,10 @@ def app():
             window['-CANVAG-'].update(background_color='gray')
         
         def get_data():
+            '''
+            get_data():
+                Recaba informacion del input DATA,TECNICO,TIPO_FEEDER,OBSERVACIONES
+            '''
             if values['-CP-'] == "OK":
                 Tipo_Feeder = "CP"    
             if values['-QP-'] == "OK":
@@ -113,10 +123,7 @@ def app():
             fecha = datetime.now().strftime('%d/%m/%Y')
             observaciones = values['-OBS-']
             return tecnico,id_feeder,Tipo_Feeder,fecha,color_f,observaciones
-        
-        #****************\\ Simulacion //****************
-        def Simulacion():
-            pass
+
         #*************\\ Eventos //*************
         
         #Obtener datos de GUI   
@@ -146,19 +153,6 @@ def app():
              #        Tel: 6462567733
              #        """)
             
-            
-        #************************************** \\ Notas sobre popups //************************************
-        '''
-        sg.popup: Muestra un cuadro de diálogo emergente con un mensaje.
-        sg.popup_ok: Muestra un cuadro de diálogo emergente con un mensaje y un botón "OK".
-        sg.popup_yes_no: Muestra un cuadro de diálogo emergente con un mensaje y botones "Sí" y "No".
-        sg.popup_ok_cancel: Muestra un cuadro de diálogo emergente con un mensaje y botones "OK" y "Cancelar".
-        sg.popup_get_text: Muestra un cuadro de diálogo emergente con un campo de texto para que el usuario ingrese texto.
-        sg.popup_get_file: Muestra un cuadro de diálogo emergente para que el usuario seleccione un archivo.
-        sg.popup_get_file: Muestra un cuadro de diálogo emergente para que el usuario seleccione un archivo (añadiendo save_as=True).
-        sg.popup_get_folder: Muestra un cuadro de diálogo emergente para que el usuario seleccione una carpeta.
-        
-        '''
     window.close()  
 
 print(app.__doc__)
