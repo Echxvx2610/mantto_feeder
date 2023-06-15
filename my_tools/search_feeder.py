@@ -17,6 +17,22 @@ df = pd.DataFrame(data)
 df.rename(columns={'serie':'ID_feeder'},inplace=True)
 df.rename(columns={'feeder':'Feeder'},inplace=True)
 
+with open('PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as archivo_csv:
+    # Crea un lector CSV
+    lector_csv = csv.reader(archivo_csv)
+    # Obtiene la primera fila del archivo CSV
+    primera_fila = next(lector_csv)
+
+    # Obtiene los valores del rango A1:H1
+    valores_rango = primera_fila[0:1502]  # Índices de las columnas que tienen por nombre las fechas del año
+    '''
+    # Imprime los valores del rango
+    for valor in valores_rango:
+        print(valor)
+    '''
+    #Crear dataframe con los valores obtenidos del csv(columnas)    
+    data_fecha = pd.DataFrame(valores_rango)
+        
 
 def search_id(ID_FEEDER:int):
     '''
@@ -46,39 +62,43 @@ def search_id(ID_FEEDER:int):
 
 
 #************************** Analisis de datos (plan feeders SEM )********************************
-#cargar archivo excel
-# Abre el archivo CSV en modo lectura
-with open('PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as archivo_csv:
-    # Crea un lector CSV
-    lector_csv = csv.reader(archivo_csv)
-    # Obtiene la primera fila del archivo CSV
-    primera_fila = next(lector_csv)
-    
-    # Obtiene los valores del rango A1:H1
-    valores_rango = primera_fila[0:1502]  # Índices de las columnas que tienen por nombre las fechas del año
-    '''
-    # Imprime los valores del rango
-    for valor in valores_rango:
-        print(valor)
-    '''
-    #Crear dataframe con los valores obtenidos del csv(columnas)    
-    data_fecha = pd.DataFrame(valores_rango)
-    
-    #comprobar si hay un OK en una interseccion data por el index de un feeder y el index de una fecha(funcionando)
-    csv_data  = list(lector_csv)
-    fila = 7 - 2 #al index deseado restarle 2 por conflicto con index
-    columna = 169 #igual a 3 por el 0 del index
-    
-    if fila < len(csv_data) and columna < len(csv_data[0]):
-        #obtener valor de interseccion
-        valor_interseccion = csv_data[fila][columna]
-        if valor_interseccion == "OK":
-            print("Se encontro el valor deseado en la interseccion")
-        else:
-            print("No se encontro el valor deseado en la interseccion")
+def cell_value():
+    #cargar archivo excel
+    # Abre el archivo CSV en modo lectura
+    with open('PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as archivo_csv:
+        # Crea un lector CSV
+        lector_csv = csv.reader(archivo_csv)
+        # Obtiene la primera fila del archivo CSV
+        primera_fila = next(lector_csv)
         
-        print(f"Valor interseccion: {valor_interseccion}")
-    else:
-        print("No se encontro valor interseccion")
-    
-    #print(search_id(104575040)) #probar funcionamiento de funcion
+        # Obtiene los valores del rango A1:H1
+        valores_rango = primera_fila[0:1502]  # Índices de las columnas que tienen por nombre las fechas del año
+        '''
+        # Imprime los valores del rango
+        for valor in valores_rango:
+            print(valor)
+        '''
+        #Crear dataframe con los valores obtenidos del csv(columnas)    
+        data_fecha = pd.DataFrame(valores_rango)
+        
+        #comprobar si hay un OK en una interseccion data por el index de un feeder y el index de una fecha(funcionando)
+        csv_data  = list(lector_csv)
+        fila = 7 - 2 #al index deseado restarle 2 por conflicto con index
+        columna = 169 #igual a 3 por el 0 del index
+        
+        if fila < len(csv_data) and columna < len(csv_data[0]):
+            #obtener valor de interseccion
+            valor_interseccion = csv_data[fila][columna]
+            if valor_interseccion == "OK":
+                print("Se encontro el valor deseado en la interseccion")
+            else:
+                print("No se encontro el valor deseado en la interseccion")
+            
+            print(f"Valor interseccion: {valor_interseccion}")
+        else:
+            print("No se encontro valor interseccion")
+        
+        
+
+print(search_id(104575040)) #probar funcionamiento de funcion
+print(cell_value())

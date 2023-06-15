@@ -2,7 +2,7 @@
 import PySimpleGUI as sg
 from threading import *
 import threading
-from my_tools import crear_plantilla
+from my_tools import crear_plantilla,search_feeder
 from datetime import datetime,timedelta,time
 import shutil
 import time
@@ -51,12 +51,8 @@ def app():
     ]
     
     # *************************************************\\ INTERSECCION DE COLUMNAS //***************************************************
-    color = "Rosa"
     
-    
-    
-    
-    
+    color = 'black'
     #***************************************************\\ LAYOUT //***************************************************
     layout = [
         #menu
