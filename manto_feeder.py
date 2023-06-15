@@ -6,11 +6,10 @@ from my_tools import crear_plantilla
 from datetime import datetime,timedelta,time
 import shutil
 import time
-
+import csv
 #***************************************************\\ ISSUES //***************************************************
-            #-->Futuramente en desarrollo cambiar inputs de texto por etiquetas,de momento coloque inputs para ver mejor organizados los elementos
             #--> Implementar Try/Except para evitar errores de tipo
-            #--> Al copiar y rellenar plantilla se pierde imagen navico group (posible solucion,implementar shutil para copiar documento)
+            #--> Al copiar y rellenar plantilla se pierde imagen navico group (posible solucion,implementar shutil para copiar documento y editar en base a ese)
 
 def app():
     '''
@@ -45,29 +44,35 @@ def app():
 
     '''
     #***************************************************\\ CONFIGURACION //***************************************************
-    sg.theme('reddit') #tema de la aplicacion    
+    sg.theme('LightGrey') #tema de la aplicacion    
     menu_layout = [
         ['File', ['Open','View','Exit']],
         ['Help','About'],
     ]
     
+    # *************************************************\\ INTERSECCION DE COLUMNAS //***************************************************
+    color = "Rosa"
+    
+    
+    
+    
+    
     #***************************************************\\ LAYOUT //***************************************************
-    color = "ROSA"
     layout = [
         #menu
         [sg.Menu(menu_layout,key='-MENU-')],
         [sg.Image(r'PysimpleGUI\Proyectos\mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-'),sg.Push()],
         [sg.Text('COLOR DE LA SEMANA',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('DATA\t\t',font=('Helvetica',15,'bold')),sg.Push()],
-        [sg.Input(default_text=color,font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(20, 50)),sg.Button('get data', size=(6, 1), font=('Helvetica',10,"bold"), key='-TEST-'),sg.Push()],
+        [sg.Input(default_text=color,font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(20, 50)),sg.Push()],
         
-        [sg.Text('ID_Feeder',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('\tCOLOR:',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('TECNICO  \t\t\t',font=('Helvetica',15,'bold')),sg.Push()],
-        [sg.Input(font=('Helvetica',15),key='-ID_FEEDER-', size=(20, 50),readonly=True),sg.Push(),sg.Input(default_text=color,font=('Helvetica',15),key='-COLOR-', size=(10, 20),readonly=True),sg.Push(),sg.Combo(values=["Francisco Rodriguez","Yamcha Cota","Efrain Ramirez"],font=('Helvetica',15),size=(40,1),key='-TECH-',enable_events=True,readonly=True)],
+        [sg.Text('ID_Feeder',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('\tCOLOR:',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('TECNICO \t\t',font=('Helvetica',15,'bold')),sg.Push()],
+        [sg.Input(font=('Helvetica',15),key='-ID_FEEDER-', size=(20, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text=color,font=('Helvetica',15),key='-COLOR-', size=(10, 20),readonly=True,text_color="blue"),sg.Push(),sg.Combo(values=["Francisco Rodriguez","Yamcha Cota","Efrain Ramirez"],font=('Helvetica',15),size=(30,1),key='-TECH-',enable_events=True,readonly=True)],
         
         [sg.Text('FEEDER \t\t',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CODIGO',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CALIBRACION',font=('Helvetica',15,'bold')),sg.Push(),sg.Push(),sg.Push()],
-        [sg.Input(font=('Helvetica',15),key='-DATA-', size=(21, 50),readonly=True),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True),sg.Push(),sg.Push(),sg.Canvas(background_color='gray',size=(150,50),key='-CANVAC-'),sg.Push(),sg.Push(),sg.Push(),sg.Push(),sg.Push(),sg.Push()],
+        [sg.Input(font=('Helvetica',15),key='-DATA-', size=(21, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True,text_color="blue"),sg.Push(),sg.Push(),sg.Canvas(background_color='gray',size=(150,50),key='-CANVAC-'),sg.Push(),sg.Push(),sg.Push(),sg.Push(),sg.Push(),sg.Push()],
         
         [sg.Text("Status",font=('Helvetica',15,'bold'))],
-        [sg.Canvas(background_color='gray',size=(900,100),key='-CANVAG-')],
+        [sg.Canvas(background_color='gray',size=(800,100),key='-CANVAG-')],
         
         [sg.HSeparator()],
         [sg.Text("CP",font=('Helvetica',15)),sg.Combo(values=["N/A","OK"],font=('Helvetica',15),size=(5,1),key='-CP-',enable_events=True,readonly=True),sg.Text("\tBFC",font=('Helvetica',15)),sg.Combo(values=["N/A","OK"],font=('Helvetica',15),size=(5,1),key='-BFC-',enable_events=True,readonly=True),sg.Push(),sg.Text("Observaciones:\t\t",font=('Helvetica',15,'bold')),sg.Push()],
@@ -118,8 +123,8 @@ def app():
             pass
         #*************\\ Eventos //*************
         
-        #Obtener datos de GUI
-        if event == '-TEST-':
+        #Obtener datos de GUI   
+        if event == '\r':
             print(get_data())
             window['-CANVAC-'].update(background_color='lawn green')
             window['-CANVAG-'].update(background_color='lawn green')
@@ -135,6 +140,15 @@ def app():
         #Eventos de menu
         if values['-MENU-'] == "Open":
             sg.popup_get_file("Seleccione un archivo",file_types=(("Excel files", "*.xlsx"), ("All files", "*.*")))
+        elif values['-MENU-'] == "About":
+            title = "Contacto"
+            message = """-Created by: Cristian Echevarria,Version: 1.0\n-Email:cristianecheverriamendoza@gmail.com\n-Tel: 6462567733-Ensenada,B.C\n"""
+
+            sg.popup(message, title=title)
+            #sg.popup("""Created by: Cristian Echevarria,Version: 1.0\n
+            #        Email:cristianecheverriamendoza@gmail.com\n
+             #        Tel: 6462567733
+             #        """)
             
             
         #************************************** \\ Notas sobre popups //************************************
