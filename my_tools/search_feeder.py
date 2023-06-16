@@ -97,41 +97,26 @@ def cell_value(ID_FEEDER:int):
         #Obtener valor de interseccion con columna fecha
         if fila < len(csv_data) and columna_fecha < len(csv_data[0]):
             #obtener valor de interseccion
-            valor_interseccion = csv_data[fila][columna_fecha]
-            if valor_interseccion == "Café con leche":
-                print("Se encontro el valor deseado en la interseccion")
-            else:
-                print("No se encontro el valor deseado en la interseccion")
-            
-            print(f"Valor interseccion: {valor_interseccion}")
+            interseccion_fecha = csv_data[fila][columna_fecha]
         else:
             print("No se encontro valor interseccion")
         
         #Obtener valor de interseccion con columna color
         if fila < len(csv_data) and columna_color < len(csv_data[0]):
             #obtener valor de interseccion
-            valor_interseccion = csv_data[fila][columna_color]
-            if valor_interseccion == "Café con leche":
-                print("Se encontro el valor deseado en la interseccion")
-            else:
-                print("No se encontro el valor deseado en la interseccion")
-            
-            print(f"Valor interseccion: {valor_interseccion}")
+            interseccion_color = csv_data[fila][columna_color]
         else:
             print("No se encontro valor interseccion")
+
         #Obtener valor de interseccion con columna codigo
         if fila < len(csv_data) and columna_codigo < len(csv_data[0]):
             #obtener valor de interseccion
-            valor_interseccion = csv_data[fila][columna_codigo]
-            if valor_interseccion == "Café con leche":
-                print("Se encontro el valor deseado en la interseccion")
-            else:
-                print("No se encontro el valor deseado en la interseccion")
-            
-            print(f"Valor interseccion: {valor_interseccion}")
+            interseccion_codigo = csv_data[fila][columna_codigo]
         else:
             print("No se encontro valor interseccion")
         
-print(search_id(104575040)) #probar funcionamiento de funcion
-print("\n")
-print(cell_value(104575040)) #probar funcionamiento de funcion
+        return interseccion_fecha, interseccion_color, interseccion_codigo
+    
+print(search_id(104575035)) #probar funcionamiento de funcion
+#print("\n")
+print(cell_value(104575035)) #probar funcionamiento de funcion

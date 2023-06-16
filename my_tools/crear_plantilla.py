@@ -85,7 +85,7 @@ def create_template(Nombre_Tecnico, ID_Feeder, Tipo_Feeder, Fecha_Mantenimiento,
     
     #guardar workbook
     ID_feeder = hoja["B14"].value
-    nuevo_nombre = f"PysimpleGUI\Proyectos\mantto_feeder\data\MF-{ID_feeder}{Fecha_Mantenimiento.replace('/','_')}.xlsx"
+    nuevo_nombre = f"PysimpleGUI\Proyectos\mantto_feeder\data\MF-{ID_feeder}_{Fecha_Mantenimiento.replace('/','_')}.xlsx"
     workbook.save(nuevo_nombre)
     workbook.close()
     

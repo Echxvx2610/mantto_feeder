@@ -7,6 +7,7 @@ from datetime import datetime,timedelta,time
 import shutil
 import time
 import csv
+import asyncio
 #***************************************************\\ ISSUES //***************************************************
             #--> Implementar Try/Except para evitar errores de tipo
             #--> Al copiar y rellenar plantilla se pierde imagen navico group (posible solucion,implementar shutil para copiar documento y editar en base a ese)
@@ -58,10 +59,10 @@ def app():
         [sg.Menu(menu_layout,key='-MENU-')],
         [sg.Image(r'PysimpleGUI\Proyectos\mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-'),sg.Push()],
         [sg.Text('COLOR DE LA SEMANA',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('DATA\t\t',font=('Helvetica',15,'bold')),sg.Push()],
-        [sg.Input(default_text=color,font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(20, 50)),sg.Push()],
+        [sg.Input(default_text=color,font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-ID_FEEDER-', size=(20, 50)),sg.Push()],
         
         [sg.Text('ID_Feeder',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('\tCOLOR:',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('TECNICO \t\t',font=('Helvetica',15,'bold')),sg.Push()],
-        [sg.Input(font=('Helvetica',15),key='-ID_FEEDER-', size=(20, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text=color,font=('Helvetica',15),key='-COLOR-', size=(10, 20),readonly=True,text_color="blue"),sg.Push(),sg.Combo(values=["Francisco Rodriguez","Yamcha Cota","Efrain Ramirez"],font=('Helvetica',15),size=(30,1),key='-TECH-',enable_events=True,readonly=True)],
+        [sg.Input(font=('Helvetica',15),key='-INF_FEEDER-', size=(20, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text=color,font=('Helvetica',15),key='-COLOR-', size=(10, 20),readonly=True,text_color="blue"),sg.Push(),sg.Combo(values=["Francisco Rodriguez","Yamcha Cota","Efrain Ramirez"],font=('Helvetica',15),size=(30,1),key='-TECH-',enable_events=True,readonly=True)],
         
         [sg.Text('FEEDER \t\t',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CODIGO',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CALIBRACION',font=('Helvetica',15,'bold')),sg.Push(),sg.Push(),sg.Push()],
         [sg.Input(font=('Helvetica',15),key='-DATA-', size=(21, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True,text_color="blue"),sg.Push(),sg.Push(),sg.Canvas(background_color='gray',size=(150,50),key='-CANVAC-'),sg.Push(),sg.Push(),sg.Push(),sg.Push(),sg.Push(),sg.Push()],
@@ -83,24 +84,38 @@ def app():
             break    
         
         #*************\\ Funciones //*************
+        async def check_status():
+            '''
+            check_status():
+                Verifica si el feeder esta activo o con mantenimiento realizado
+            '''
+            #buscar feeder por id
+            resultado = search_feeder.search_id(int(values['-ID_FEEDER-']))
+            if resultado is not None:
+                window["-CANVAG-"].update(background_color='lawn green')
+                window["-CANVAC-"].update(background_color='lawn green')
+                #window["-ID_feeder-"].update('')   
+            if resultado is None:
+                window["-CANVAG-"].update(background_color='red')
+                window["-CANVAC-"].update(background_color='red')
+                sg.popup('Feeder no encontrado!!')
         
-        
-        
+
         
         def reset():
             '''
             reset():
                 Establece el color de los canvas a gris asi como el de los inputs en blanco
             '''
-            time.sleep(2)
-            window['-DATA-'].update('')
+            time.sleep(1 )
             window['-ID_FEEDER-'].update('')
             window['-COLOR-'].update('')
             window['-TECH-'].update('')
             window['-OBS-'].update('')
             window['-CANVAC-'].update(background_color='gray')
             window['-CANVAG-'].update(background_color='gray')
-        
+            window['-DATA-'].update('')
+            
         def get_data():
             '''
             get_data():
@@ -114,8 +129,8 @@ def app():
                 Tipo_Feeder = "BFC"
             if values['-HOVER-'] == "OK":
                 Tipo_Feeder = "HO0VER"
-            id_feeder = values['-DATA-'] #toma el valor del input DATA
-            window['-ID_FEEDER-'].update(id_feeder) #actualiza el input ID_FEEDER
+            id_feeder = values['-ID_FEEDER-'] #toma el valor del input DATA
+            window['-INF_FEEDER-'].update(id_feeder) #actualiza el input ID_FEEDER
             copy_id = values['-ID_FEEDER-'] #toma el valor del input ID_FEEDER
             color_f = values['-COLORF-'] #toma el valor del texto
             window['-COLOR-'].update(color_f) #actualiza el input COLOR a el color de semana establecido
@@ -125,37 +140,72 @@ def app():
             return tecnico,id_feeder,Tipo_Feeder,fecha,color_f,observaciones
 
         #*************\\ Eventos //*************
-        
+        #Manejo de errores para evitar bloqueo de app
+        '''
         #Obtener datos de GUI   
         if event == '\r':
-            print(get_data())
-            window['-CANVAC-'].update(background_color='lawn green')
-            window['-CANVAG-'].update(background_color='lawn green')
-            #crear plantilla
-            #1ra opcion
-            #data = list(get_data())
-            #crear_plantilla.create_template(data[0],data[1],data[2],data[3],data[4])
-            #2da opcion
-            crear_plantilla.create_template(get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5])
-            hilo = threading.Thread(target=reset,daemon=True)
-            hilo.start()
-            
+            print(get_data()) #revisar que valores tomo la funcion get_data
+            asyncio.run(check_status())
+            get_data()
+            #Crear plantilla
+            #validamos que no falte ningun dato
+            primer_dato,segundo_dato,tercer_dato,cuarto_dato,quinto_dato,sexto_dato = get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5]    
+            if primer_dato == '' or segundo_dato == '' or tercer_dato == '' or cuarto_dato == '' or quinto_dato == '' or sexto_dato == '':
+                sg.popup('Faltan datos por llenar')
+            else:
+                #Si todo lo anterior esta orden es decir se ha llenado toda la info se genera un reporte
+                crear_plantilla.create_template(get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5])
+                generador = threading.Thread(target=reset,daemon=True)
+                generador.start()
+                sg.popup('Reporte generado con exito!')
+                reset()
+        '''
+        
+        try:
+            #Obtener datos de GUI   
+            if event == '\r':
+                print(get_data()) #revisar que valores tomo la funcion get_data
+                asyncio.run(check_status())
+                get_data()
+                #Crear plantilla
+                #validamos que no falte ningun dato
+                primer_dato,segundo_dato,tercer_dato,cuarto_dato,quinto_dato,sexto_dato = get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5]    
+                if primer_dato == '' or segundo_dato == '' or tercer_dato == '' or cuarto_dato == '' or quinto_dato == '' or sexto_dato == '':
+                    sg.popup('Faltan datos por llenar')
+                else:
+                    #Si todo lo anterior esta orden es decir se ha llenado toda la info se genera un reporte
+                    crear_plantilla.create_template(get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5])
+                    generador = threading.Thread(target=reset,daemon=True)
+                    generador.start()
+                    sg.popup('Reporte generado con exito!')
+                    reset()
+        except UnboundLocalError:
+            title = "Excepcion!"
+            message = """-! Ocurrio un error.\nAsegurese de haber introduccido el ID del feeder o haber seleccionado un tipo de feeder"""
+            sg.popup(message, title=title)
+        except ValueError:
+            title = "Excepcion!"
+            message = """-! Ocurrio un error al leer el ID del feeder.\nAsegurese de haber introduccido el ID del feeder o haber seleccionado un tipo de feeder\nEl ID debe ser numérico!!"""
+            sg.popup(message, title=title)
+        except:
+            title = "Excepcion!"
+            message = """-!Ocurrio un error al procesar los datos.\nAntes de comenzar escanee el ID del feeder.\nSi el problema consiste contacta al Equipo de MFG."""
+            sg.popup(message, title=title)
+
         #Eventos de menu
         if values['-MENU-'] == "Open":
             sg.popup_get_file("Seleccione un archivo",file_types=(("Excel files", "*.xlsx"), ("All files", "*.*")))
         elif values['-MENU-'] == "About":
             title = "Contacto"
             message = """-Created by: Cristian Echevarria,Version: 1.0\n-Email:cristianecheverriamendoza@gmail.com\n-Tel: 6462567733-Ensenada,B.C\n"""
-
             sg.popup(message, title=title)
-            #sg.popup("""Created by: Cristian Echevarria,Version: 1.0\n
-            #        Email:cristianecheverriamendoza@gmail.com\n
-             #        Tel: 6462567733
-             #        """)
             
+        
+        
+        
     window.close()  
 
-print(app.__doc__)
+#print(app.__doc__) 
 
 if __name__ == '__main__':
     app()

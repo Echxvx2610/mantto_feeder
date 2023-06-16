@@ -31,6 +31,7 @@ def feeder_status():
             **hace una consulta en el registro excel de los feeders
         
         '''
+        """
         #buscar feeder por id
         resultado = search_feeder.search_id(int(values['-ID_feeder-']))
         if resultado is not None:
@@ -41,6 +42,10 @@ def feeder_status():
         if resultado is None:
             asyncio.run(reset_status())
             sg.popup('Feeder no encontrado!!')
+        """
+        valor = search_feeder.cell_value(int(values['-ID_feeder-']))
+        print(valor)
+        
     async def reset_status():
         '''
         reset status():
@@ -56,7 +61,6 @@ def feeder_status():
     
     
     #********************************************\\ LAYOUT //*****************************************************
-    
     
     layout = [
         #[sg.Text('Feder Status',font=('Oswald',20))],
@@ -79,7 +83,11 @@ def feeder_status():
             if len(values['-ID_feeder-']) == 9:
                     asyncio.run(check_status())
         except:
-            print("Error")
+            window['-CANVA-'].update(background_color='red')
+            title = "Excepción!!"
+            message = """-Ocurrio un error al consultar el estado del feeder.\nContactate al equipo de MFG"""
+            sg.popup(message, title=title)
+            window['-ID_feeder-'].update('')
             
             
             
