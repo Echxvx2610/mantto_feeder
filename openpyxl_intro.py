@@ -3,6 +3,8 @@ from openpyxl import workbook,load_workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Alignment, Border, Side
 from datetime import datetime
+import time
+
 
 # ************************************* MANIPULACION DE ARCHIVOS EXCEL *************************************
 def info():
@@ -164,7 +166,6 @@ celda_interseccion = hoja[columna_interseccion + fila_interseccion]
 
 # Asignar un valor a la celda de intersección
 celda_interseccion.value = "OK"
-
 
 #***************************** GUARDAR Y CERRAR ARCHIVO ****************************     
 #nuevo_nombre = "MF-64_23760055.xls"

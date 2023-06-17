@@ -29,22 +29,22 @@ def feeder_status():
         Check status():
             revisa el estado del feeder y actualiza el valor del background_color del canvas
             **hace una consulta en el registro excel de los feeders
-        
         '''
-        """
-        #buscar feeder por id
-        resultado = search_feeder.search_id(int(values['-ID_feeder-']))
-        if resultado is not None:
-            window["-STATUS-"].update(resultado)
-            window["-CANVA-"].update(background_color='lawn green')
-            window["-ID_feeder-"].update('')
-            await asyncio.sleep(0.5)    
-        if resultado is None:
-            asyncio.run(reset_status())
-            sg.popup('Feeder no encontrado!!')
-        """
-        valor = search_feeder.cell_value(int(values['-ID_feeder-']))
-        print(valor)
+        valores = search_feeder.cell_value(int(values['-ID_feeder-']))
+        valor_intercecion = valores[0]
+        if valor_intercecion == "OK":
+            window['-CANVA-'].update(background_color='lawn green')
+            window['-ID_feeder-'].update('')
+            print(valor_intercecion)
+        elif valor_intercecion == "":
+            window['-CANVA-'].update(background_color='red')
+            window['-ID_feeder-'].update('')
+            sg.popup('Feeder no Registrado!!')
+        else:
+            window['-CANVA-'].update(background_color='red')
+            window['-ID_feeder-'].update('')
+            print(valor_intercecion)
+            
         
     async def reset_status():
         '''
@@ -78,7 +78,7 @@ def feeder_status():
         if event == sg.WIN_CLOSED:
             break
         
-        #***********************************\\ Pruebas con scanner //***********************************
+        #******************************************* Funcion principal de la applicacion ********************************
         try:
             if len(values['-ID_feeder-']) == 9:
                     asyncio.run(check_status())
@@ -88,35 +88,10 @@ def feeder_status():
             message = """-Ocurrio un error al consultar el estado del feeder.\nContactate al equipo de MFG"""
             sg.popup(message, title=title)
             window['-ID_feeder-'].update('')
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-        '''
-        if event == '\r':
-            if len(values['-ID_feeder-']) == 9:
-                check_status()
-                #script para abrir aplicaciones .exe
-                # import subprocess
-                # ruta_programa = r'C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE'
-                # # Ejecutar el programa
-                # subprocess.run(ruta_programa)
-                hilo = threading.Thread(target=reset_status)
-                hilo.start()
-            else:
-                sg.popup('Feeder no encontrado!!')
-        '''
-        #****************************************************************************************`         
+
+        #****************************************************************************************       
     window.close()
       
 if __name__ == '__main__':
-    feeder_status()
-    print(feeder_status.__doc__)
+     feeder_status()
+#    print(feeder_status.__doc__)

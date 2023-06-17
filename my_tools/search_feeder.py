@@ -17,9 +17,10 @@ df = pd.DataFrame(data)
 df.rename(columns={'serie':'ID_feeder'},inplace=True)
 df.rename(columns={'feeder':'Feeder'},inplace=True)
 
-with open('PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as archivo_csv:
+#apertura del archivo csv (plan feeders SEM)
+with open('PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as plan_semanal:
     # Crea un lector CSV
-    lector_csv = csv.reader(archivo_csv)
+    lector_csv = csv.reader(plan_semanal)
     # Obtiene la primera fila del archivo CSV
     primera_fila = next(lector_csv)
 
@@ -30,9 +31,15 @@ with open('PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') 
     for valor in valores_rango:
         print(valor)
     '''
-    #Crear dataframe con los valores obtenidos del csv(columnas)    
+    #Crear dataframe con los valores obtenidos del csv(columnas fechas)    
     data_fecha = pd.DataFrame(valores_rango)
-        
+
+with open(r"PysimpleGUI\Proyectos\mantto_feeder\data\mantto seq.csv") as mantto_seq:
+    #Crear un lector
+    lectura_mantto = csv.reader(mantto_seq)
+    data_mantto = pd.read_csv(r"PysimpleGUI\Proyectos\mantto_feeder\data\mantto seq.csv",encoding = "ISO-8859-1",usecols=['DIA','COLOR'])
+    df_mantto = pd.DataFrame(data_mantto)
+    print(df_mantto)
 
 def search_id(ID_FEEDER:int):
     '''
@@ -59,15 +66,19 @@ def search_id(ID_FEEDER:int):
         valor_fecha = fecha_formateada
         indice_fecha = int(data_fecha[0].index[data_fecha[0]==valor_fecha][0]) + 1
         print('Indice de fecha buscada: ',indice_fecha)
-        return resultado
+        return resultado 
 
 #************************** Analisis de datos (plan feeders SEM )********************************
 def cell_value(ID_FEEDER:int):
+    '''
+    cell_value(ID_FEEDER:int)
+        retorna una tupla con los valores de interseccion entre el id de un feeder respecto a la columna fecha,color y codigo
+    '''
     #cargar archivo excel
     # Abre el archivo CSV en modo lectura
-    with open('PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as archivo_csv:
+    with open('PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as plan_semanal:
         # Crea un lector CSV
-        lector_csv = csv.reader(archivo_csv)
+        lector_csv = csv.reader(plan_semanal)
         # Obtiene la primera fila del archivo CSV
         primera_fila = next(lector_csv)
         # Obtiene los valores del rango A1:H1
@@ -79,14 +90,14 @@ def cell_value(ID_FEEDER:int):
         #Valores de index feeder y fecha "Exactos" para analisis de CSV
         #Obtener index de feeder
         valor_feeder = ID_FEEDER
-        indice_feeder = int(df['ID_feeder'].index[df['ID_feeder']==valor_feeder][0])# + 2
-        print("Indice feeder: ",indice_feeder)
+        indice_feeder = int(df['ID_feeder'].index[df['ID_feeder']==valor_feeder][0])
+        print("Indice feeder: ",indice_feeder + 2) # + 2 debido al index
         #Obtener index de fecha
         fecha_actual = datetime.now()
         fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')
         valor_fecha = fecha_formateada
-        indice_fecha = int(data_fecha[0].index[data_fecha[0]==valor_fecha][0])# + 1
-        print('Indice de fecha buscada: ',indice_fecha)
+        indice_fecha = int(data_fecha[0].index[data_fecha[0]==valor_fecha][0])
+        print('Indice de fecha buscada: ',indice_fecha + 1) # + 1 debido al index
         
         #comprobar si hay un OK en una interseccion data por el index de un feeder y el index de una fecha(funcionando)
         csv_data  = list(lector_csv)
@@ -117,6 +128,31 @@ def cell_value(ID_FEEDER:int):
         
         return interseccion_fecha, interseccion_color, interseccion_codigo
     
-print(search_id(104575035)) #probar funcionamiento de funcion
+    
+def search_fecha(FECHA:str):
+    '''
+    search_id(ID_FEEDER:int)
+        toma como parametro el id del feeder,mismo que sera proporcionado por la app feeder status
+        mediante el escaneo de los feeders.
+        retorna: un dataframe con todos los datos del feeder ( ID_feeder, Feeder )  
+        
+        extra:
+            -Index ID_feeder: index de ID_feeder(posicion del dato en csv)
+            -Index fecha: index de fecha (posicion del dato en csv)
+    '''
+    #fecha en columna
+    index_fecha = df_mantto.loc[df_mantto['DIA'] == FECHA].to_string(index = False)
+    index_fecha = index_fecha.split()
+    dia = index_fecha[2]
+    color = index_fecha[3]
+    return dia, color
+    
+#Quitar comentarios para testear
+#print(search_id(104575035)) #probar funcionamiento de funcion
 #print("\n")
-print(cell_value(104575035)) #probar funcionamiento de funcion
+#print(cell_value(104575035)) #probar funcionamiento de funcion
+
+fecha_actual = datetime.now()
+fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')   
+
+print(search_fecha(fecha_formateada)[1]) #probando funcion para buscar fecha
