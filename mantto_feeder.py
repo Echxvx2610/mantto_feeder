@@ -13,9 +13,9 @@ import os
 
 
 #***************************************************\\ ISSUES //***************************************************
-            #--> Implementar Try/Except para evitar errores de tipo
-            #--> Al copiar y rellenar plantilla se pierde imagen navico group (posible solucion,implementar shutil para copiar documento y editar en base a ese)
-            #--> color de semana viene dado por csv mantto seq(trabajando en funcion para obtener fecha y color)
+            #--> Implementar Try/Except para evitar errores de tipo                                                                                                         [IN PROCESS]
+            #--> Al copiar y rellenar plantilla se pierde imagen navico group (posible solucion,implementar shutil para copiar documento y editar en base a ese)            [IN PROCESS]
+            #--> color de semana viene dado por csv mantto seq(trabajando en funcion para obtener fecha y color)                                                            [IN PROCESS]
                     
 
 def app():
@@ -62,15 +62,15 @@ def app():
     layout = [
         #menu
         [sg.Menu(menu_layout,key='-MENU-')],
-        [sg.Image(r'PysimpleGUI\Proyectos\mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-'),sg.Push()],
+        [sg.Image(r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-'),sg.Push()],
         [sg.Text('COLOR DE LA SEMANA',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('DATA\t\t',font=('Helvetica',15,'bold')),sg.Push()],
-        [sg.Input(default_text="N\A",font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-ID_FEEDER-', size=(20, 50)),sg.Push()],
+        [sg.Input(default_text="N\A",font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-ID_FEEDER-',readonly=False,text_color='white',size=(20, 50)),sg.Push()],
         
         [sg.Text('ID_Feeder',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('\tCOLOR:',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('TECNICO \t\t',font=('Helvetica',15,'bold')),sg.Push()],
-        [sg.Input(font=('Helvetica',15),key='-INF_FEEDER-', size=(20, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text="N\A",font=('Helvetica',15),key='-COLORC-', size=(10,20),readonly=True,text_color="blue"),sg.Push(),sg.Combo(values=["Francisco Rodriguez","Yamcha Cota","Efrain Ramirez"],font=('Helvetica',15),size=(30,1),key='-TECH-',enable_events=True,readonly=True)],
+        [sg.Input(font=('Helvetica',15),key='-INF_FEEDER-', size=(20, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text="N\A",font=('Helvetica',15),key='-color-', size=(10,20),readonly=True,text_color="blue"),sg.Push(),sg.Combo(values=["Francisco Rodriguez","Yamcha Cota","Efrain Ramirez"],font=('Helvetica',15),size=(30,1),key='-TECH-',enable_events=True,readonly=True)],
         
         [sg.Text('FEEDER \t\t',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CODIGO',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CALIBRACION',font=('Helvetica',15,'bold')),sg.Push(),sg.Push(),sg.Push()],
-        [sg.Input(font=('Helvetica',15),key='-DATA-', size=(21, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True,text_color="blue"),sg.Push(),sg.Push(),sg.Canvas(background_color='gray',size=(150,50),key='-CANVAC-'),sg.Push(),sg.Push(),sg.Push(),sg.Push(),sg.Push(),sg.Push()],
+        [sg.Input(font=('Helvetica',15),key='-DATA-', size=(21, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True,text_color="blue"),sg.Push(),sg.Push(),sg.Canvas(background_color='gray',size=(150,50),key='-CANVAC-'),sg.Button('Calibrar',font=('Helvetica',15),size=(10,1),key='-CALIB-',enable_events=True),sg.Push(),sg.Push(),sg.Push(),sg.Push()],
         
         [sg.Text("Status",font=('Helvetica',15,'bold'))],
         [sg.Canvas(background_color='gray',size=(800,100),key='-CANVAG-')],
@@ -96,29 +96,35 @@ def app():
             check_status():
                 Verifica si el feeder esta activo o con mantenimiento realizado
             '''
+            
+            valor_de_celda = search_feeder.cell_value(int(values['-ID_FEEDER-']))[0]
             #buscar feeder por id
             resultado = search_feeder.search_id(int(values['-ID_FEEDER-']))
-            #index_fecha = 
-            if resultado is not None:
-                window["-CANVAG-"].update(background_color='lawn green')
-                window["-CANVAC-"].update(background_color='lawn green')
-                #window["-ID_feeder-"].update('')   
-            if resultado is None:
-                window["-CANVAG-"].update(background_color='red')
-                window["-CANVAC-"].update(background_color='red')
-                sg.popup('Feeder no encontrado!!')
-                
-        
-        async def index_fecha():
             fecha_actual = datetime.now()
             fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')
-            resultado = search_feeder.search_fecha(fecha_formateada)[1]
+            data_fecha = search_feeder.search_fecha(fecha_formateada)[1]
+            
+            valor = valor_de_celda == "OK" or valor_de_celda == "P"
+            print(valor_de_celda == "OK" or valor_de_celda == "P")
+            print(data_fecha)
+            print(resultado)
             if resultado is not None:
-                window['-COLORF-'].update(resultado)
-                window['-COLORC-'].update(resultado)
-                
-   
-
+                if valor_de_celda == "OK" or valor_de_celda == "P":
+                    window["-CANVAG-"].update(background_color='lawn green')
+                    window["-CANVAC-"].update(background_color='lawn green')
+                    window['-color-'].update(data_fecha)
+                    window['-COLORF-'].update(data_fecha)
+                    window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
+                    window['-ID_FEEDER-'].update(text_color='blue',disabled=True)
+                    #window["-ID_feeder-"].update('')   
+                else:
+                    window["-CANVAG-"].update(background_color='red')
+                    window["-CANVAC-"].update(background_color='red')
+                    #sg.popup_error('Feeder fuera de mantenimiento!!')       
+            if resultado == 0 or valor_de_celda == False:
+                window["-CANVAG-"].update(background_color='red')
+                window["-CANVAC-"].update(background_color='red')
+                sg.popup_error('Feeder no encontrado!!')
         
         def reset():
             '''
@@ -127,7 +133,7 @@ def app():
             '''
             time.sleep(1 )
             window['-ID_FEEDER-'].update('')
-            window['-COLORC-'].update('')
+            window['-color-'].update('')
             window['-TECH-'].update('')
             window['-OBS-'].update('')
             window['-CANVAC-'].update(background_color='gray')
@@ -149,9 +155,8 @@ def app():
                 Tipo_Feeder = "HO0VER"
             id_feeder = values['-ID_FEEDER-'] #toma el valor del input DATA
             window['-INF_FEEDER-'].update(id_feeder) #actualiza el input ID_FEEDER
-            copy_id = values['-ID_FEEDER-'] #toma el valor del input ID_FEEDER
-            color_f = values['-COLORF-'] #toma el valor del texto
-            window['-COLORC-'].update(color_f) #actualiza el input COLOR a el color de semana establecido
+            #copy_id = values['-ID_FEEDER-'] #toma el valor del input ID_FEEDER
+            color_f = values['-color-']
             tecnico = values['-TECH-'] #toma el valor del input TECNICO        
             fecha = datetime.now().strftime('%d/%m/%Y')
             observaciones = values['-OBS-']
@@ -159,32 +164,18 @@ def app():
 
         #*************\\ Eventos //*************
         #Manejo de errores para evitar bloqueo de app
-        '''
-        #Obtener datos de GUI   
-        if event == '\r':
-            print(get_data()) #revisar que valores tomo la funcion get_data
-            asyncio.run(check_status())
-            get_data()
-            #Crear plantilla
-            #validamos que no falte ningun dato
-            primer_dato,segundo_dato,tercer_dato,cuarto_dato,quinto_dato,sexto_dato = get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5]    
-            if primer_dato == '' or segundo_dato == '' or tercer_dato == '' or cuarto_dato == '' or quinto_dato == '' or sexto_dato == '':
-                sg.popup('Faltan datos por llenar')
-            else:
-                #Si todo lo anterior esta orden es decir se ha llenado toda la info se genera un reporte
-                crear_plantilla.create_template(get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5])
-                generador = threading.Thread(target=reset,daemon=True)
-                generador.start()
-                sg.popup('Reporte generado con exito!')
-                reset()
-        '''
-        
+        try:
+            if event == '\r':
+                asyncio.run(check_status())
+        except:
+            title = "Excepcion!"
+            message = """-! Ocurrio un error.\nAsegurese de haber introduccido el ID del feeder correctamente"""
+            sg.popup(message, title=title)
         try:
             #Obtener datos de GUI   
-            if event == '\r':
+            if event == '-CALIB-':
+                #print(values)
                 print(get_data()) #revisar que valores tomo la funcion get_data
-                asyncio.run(check_status())
-                asyncio.run(index_fecha())
                 get_data()
                 #Crear plantilla
                 #validamos que no falte ningun dato

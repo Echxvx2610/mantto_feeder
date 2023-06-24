@@ -37,7 +37,7 @@ print(info.__doc__)
 
 
 # Nombre del archivo Excel
-nombre_excel = r'PysimpleGUI\Proyectos\mantto_feeder\manto_feeder.xlsx'
+nombre_excel = r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\mantto_feeder.xlsx'
 
 try:
     # Intentar cargar el archivo existente
@@ -94,11 +94,12 @@ for columna in range(ord(columna_inicio), ord(columna_fin) + 1):
         hoja[celda] = "OK"
 
 #************************** Rellenar un rango de columnas *************************************
+"""
 # Detenerse si encuentra una celda con datos
 columna_inicio = 'J'
 columna_fin = 'V'
-fila_inicio = 3
-fila_fin = 3
+fila_inicio = 2
+fila_fin = 2
 
 # Bandera para indicar si se encuentra una celda con datos
 encontrado_datos = False
@@ -107,13 +108,27 @@ encontrado_datos = False
 for columna in range(ord(columna_inicio), ord(columna_fin) + 1):
     for fila in range(fila_inicio, fila_fin + 1):
         celda = chr(columna) + str(fila)
+        if hoja[celda].value is not None:
+            hoja[celda] = "OK"
+        elif hoja[celda] is None:
+            break
+    if encontrado_datos == True:
+        break
+"""
+# Definir el rango de columnas que deseas llenar
+columna_inicio = 'J'
+columna_fin = 'V'
+fila_inicio = 2
+fila_fin = 2
+
+# Llenar el rango de columnas con la palabra "OK" (RELLENAR RANGO O CUADRO COMO EL DE OBSERVACION)
+for columna in range(ord(columna_inicio), ord(columna_fin) + 1):
+    for fila in range(fila_inicio, fila_fin + 1):
+        celda = chr(columna) + str(fila)
         if hoja[celda].value is None:
             hoja[celda] = "OK"
         else:
-            encontrado_datos = True
             break
-    if encontrado_datos:
-        break
 
 # ************************** Buscar un valor o valores en una columna o fila ********************************
 
@@ -132,10 +147,11 @@ for celda in columna:
         
 
 #*************************  Buscar valores en rango de columnas************************************
+
 columna_inicio = 'J'
-columna_fin = 'Z'
-fila_inicio = 5
-fila_fin = 5
+columna_fin = 'V'
+fila_inicio = 8
+fila_fin = 8
 
 # Bandera para indicar si se encuentra una celda con datos
 encontrado_datos = False
@@ -154,7 +170,7 @@ for columna in range(ord(columna_inicio), ord(columna_fin) + 1):
 
 #**************************** rellenar la interseccion de una fila con una columna ************************
 # Definir fila y columna
-fila = 6
+fila = 4
 columna = 'J'
 
 # Calcular la intersección
@@ -170,6 +186,6 @@ celda_interseccion.value = "OK"
 #***************************** GUARDAR Y CERRAR ARCHIVO ****************************     
 #nuevo_nombre = "MF-64_23760055.xls"
 # Guardar y cerrar el archivo
-workbook.save("PysimpleGUI\Proyectos\mantto_feeder\MF-64_23760055.xlsx")
+workbook.save(r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\mantto_feeder.xlsx")
 workbook.close()
 
