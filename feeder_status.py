@@ -31,15 +31,17 @@ def feeder_status():
             **hace una consulta en el registro excel de los feeders
         '''
         valores = search_feeder.cell_value(int(values['-ID_feeder-']))
+        status = search_feeder.search_id(int(values['-ID_feeder-']))
         valor_intercecion = valores[0]
         if valor_intercecion == "OK":
             window['-CANVA-'].update(background_color='lawn green')
+            window['-STATUS-'].update(status)
             window['-ID_feeder-'].update('')
             print(valor_intercecion)
         elif valor_intercecion == "":
             window['-CANVA-'].update(background_color='red')
             window['-ID_feeder-'].update('')
-            sg.popup('Feeder no Registrado!!')
+            sg.popup_error('Feeder fuera de registro!!',title=':/')
         else:
             window['-CANVA-'].update(background_color='red')
             window['-ID_feeder-'].update('')
@@ -64,7 +66,7 @@ def feeder_status():
     
     layout = [
         #[sg.Text('Feder Status',font=('Oswald',20))],
-        [sg.Image(r'PysimpleGUI\Proyectos\mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-')],
+        [sg.Image(r'mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-')],
         [sg.Text('ID_feeder:',font=('Avenir Next LT Pro Demi',15)),sg.Input(key='-ID_feeder-',size=(20,50),enable_events=True)],
         [sg.Text("Datos Feeder:",font=('Avenir Next LT Pro Demi',12,'bold'))],
         [sg.Text('',font=('Avenir Next LT Pro Demi',9,'bold'),key='-STATUS-')],
@@ -84,8 +86,9 @@ def feeder_status():
                     asyncio.run(check_status())
         except:
             window['-CANVA-'].update(background_color='red')
+            window['-STATUS-'].update('')
             title = "Excepción!!"
-            message = """-Ocurrio un error al consultar el estado del feeder.\nContactate al equipo de MFG"""
+            message = """-Ocurrio un error al consultar el estado del feeder.\nSi el problema persiste, contacte a MFG"""
             sg.popup(message, title=title)
             window['-ID_feeder-'].update('')
 

@@ -118,6 +118,8 @@ def app():
                     window['-ID_FEEDER-'].update(text_color='blue',disabled=True)
                     #window["-ID_feeder-"].update('')   
                 else:
+                    window['-color-'].update(data_fecha)
+                    window['-COLORF-'].update(data_fecha)
                     window["-CANVAG-"].update(background_color='red')
                     window["-CANVAC-"].update(background_color='red')
                     #sg.popup_error('Feeder fuera de mantenimiento!!')       
