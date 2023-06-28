@@ -95,41 +95,18 @@ for columna in range(ord(columna_inicio), ord(columna_fin) + 1):
 
 #************************** Rellenar un rango de columnas *************************************
 """
-# Detenerse si encuentra una celda con datos
-columna_inicio = 'J'
-columna_fin = 'V'
-fila_inicio = 2
-fila_fin = 2
+# Definir el rango de columnas a rellenar
+rango_columnas = hoja['J8:U8']
 
-# Bandera para indicar si se encuentra una celda con datos
-encontrado_datos = False
-
-# Llenar el rango de columnas con la palabra "OK"
-for columna in range(ord(columna_inicio), ord(columna_fin) + 1):
-    for fila in range(fila_inicio, fila_fin + 1):
-        celda = chr(columna) + str(fila)
-        if hoja[celda].value is not None:
-            hoja[celda] = "OK"
-        elif hoja[celda] is None:
-            break
-    if encontrado_datos == True:
-        break
+# Iterar sobre cada celda del rango de columnas
+for celda in rango_columnas[0]:
+    # Verificar si el valor de la celda es igual a 'P'
+    if celda.value == 'P':
+        break  # Si encuentra 'P', se detiene el bucle
+    # Rellenar la celda con el valor deseado
+    celda.value = 'OK'  # Reemplaza 'Valor_a_rellenar' con el valor que desees
+    
 """
-# Definir el rango de columnas que deseas llenar
-columna_inicio = 'J'
-columna_fin = 'V'
-fila_inicio = 2
-fila_fin = 2
-
-# Llenar el rango de columnas con la palabra "OK" (RELLENAR RANGO O CUADRO COMO EL DE OBSERVACION)
-for columna in range(ord(columna_inicio), ord(columna_fin) + 1):
-    for fila in range(fila_inicio, fila_fin + 1):
-        celda = chr(columna) + str(fila)
-        if hoja[celda].value is None:
-            hoja[celda] = "OK"
-        else:
-            break
-
 # ************************** Buscar un valor o valores en una columna o fila ********************************
 
 # Especificar la columna en la que se realizará la búsqueda

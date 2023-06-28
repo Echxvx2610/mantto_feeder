@@ -4,6 +4,7 @@ import pandas as pd
 import openpyxl
 from openpyxl import workbook,load_workbook
 from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font, Alignment, Border, Side
 from datetime import datetime,time
 #*********************** Configuracion de dataframe(muestra todo el dataframe)********************
 pd.set_option('display.max_columns', None)
@@ -148,11 +149,88 @@ def search_fecha(FECHA:str):
     dia = index_fecha[2]
     color = index_fecha[3]
     return dia, color
+
+def rellenar_rango_hasta_P(fila, columna_inicio):
+    '''
+    rellenar_rango_hasta_P(fila, columna_inicio):
+        rellena con 'OK' un rango de columnas hasta que encuentra una P
+        
+        parametros:
+            -fila: es el index del feeder
+            -columna_inicio: es el index de la columna de la fecha actual
+            
+        condiciones:
+            -Verificar si la fila existe en el rango de filas del archivo CSV
+            -Verificar si la columna de inicio está dentro del rango de la fila
+            -Verificar si la columna de fin está dentro del rango de la fila
+            -Rellena un rango de columnas con OK apartir de la interseccion de la fecha y el id del feeder
+            -Al iniciar a rellenar si detecta varias P de manera consecutiva,las cuenta y si son iguales o menores a 15,las sobreescribe y se detiene en la proxima P
+            
     
+    '''
+    try:
+        # Abrir el archivo CSV en modo lectura
+        with open(r'C:\\Users\\CECHEVARRIAMENDOZA\\OneDrive - Brunswick Corporation\\Documents\\Proyectos_Python\\PysimpleGUI\\Proyectos\\mantto_feeder\\data\\plan feeders SEM2.csv', 'r') as archivo_csv:
+            # Leer el archivo CSV
+            filas = list(csv.reader(archivo_csv))
+        """ Manejo de errrores
+        # Verificar si la fila existe en el rango de filas del archivo CSV
+        if fila - 1 >= len(filas):
+            print(f"La fila {fila} está fuera del rango de filas del archivo CSV.")
+            return
+
+        # Verificar si la columna de inicio está dentro del rango de la fila
+        if columna_inicio - 1 >= len(fila_deseada):
+            print(f"La columna {columna_inicio} está fuera del rango de la fila {fila}.")
+            return
+
+        # Verificar si la columna de fin está dentro del rango de la fila
+        if columna_fin - 1 >= len(fila_deseada):
+            print(f"La columna {columna_fin} está fuera del rango de la fila {fila}.")
+            return
+        """
+
+        # Obtener la fila deseada
+        fila_deseada = filas[fila - 1]
+        # Declarar la columna final
+        columna_fin = len(fila_deseada)
+
+        #Contar celdas consecutivas con valor "P" hasta un máximo de 15
+        p_consecutivas = 0
+        for i in range(columna_inicio - 1, columna_fin):
+            if fila_deseada[i] == 'P':
+                p_consecutivas += 1
+                if p_consecutivas <= 15:
+                   fila_deseada[i] = "OK"
+            else:
+                break
+            
+        # Rellenar celdas consecutivas con valor "OK" hasta la próxima celda con valor "P"
+        for i in range(columna_inicio - 1, columna_fin):
+            # Verificar si el valor de la celda es igual a 'P'
+            if fila_deseada[i] == 'P':
+                break  # Si encuentra 'P', se detiene el bucle
+            
+            # Rellenar la celda con el valor deseado
+            fila_deseada[i] = "OK"
+
+        # Guardar los cambios en el archivo CSV
+        with open(r"C:\\Users\\CECHEVARRIAMENDOZA\\OneDrive - Brunswick Corporation\\Documents\\Proyectos_Python\\PysimpleGUI\\Proyectos\\mantto_feeder\\data\\plan feeders SEM2.csv", 'w', newline='') as archivo_csv:
+            escritor = csv.writer(archivo_csv)
+            escritor.writerows(filas)
+    except:
+        print("El Archivo se encuentra abierto!!")
+
+
+
 #Quitar comentarios para testear
-#print(search_id(104575035)) #probar funcionamiento de funcion
 #print("\n")
-#print(cell_value(104575035)[0]) #probar funcionamiento de funcion
 fecha_actual = datetime.now()
 fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')   
-#print(search_fecha(fecha_formateada)[1]) #probando funcion para buscar fecha
+
+
+#print("\nresultado search_id:\n",search_id(104575035)) #probar funcionamiento de funcion
+#print("\nresultado cell_value:",cell_value(104575035)) #probar funcionamiento de funcion
+#print("resultado search_fecha",search_fecha(fecha_formateada)[1]) #probando funcion para buscar fecha
+#rellenar_rango_hasta_P(5,182,300)
+rellenar_rango_hasta_P( 5, 8)

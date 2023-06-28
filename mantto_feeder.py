@@ -2,7 +2,7 @@
 import PySimpleGUI as sg
 from threading import *
 import threading
-from my_tools import crear_plantilla,search_feeder
+from my_tools import crear_plantilla,search_feeder,progress
 from datetime import datetime,time
 import subprocess
 import shutil
@@ -70,10 +70,10 @@ def app():
         [sg.Input(font=('Helvetica',15),key='-INF_FEEDER-', size=(20, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text="N\A",font=('Helvetica',15),key='-color-', size=(10,20),readonly=True,text_color="blue"),sg.Push(),sg.Combo(values=["Francisco Rodriguez","Yamcha Cota","Efrain Ramirez"],font=('Helvetica',15),size=(30,1),key='-TECH-',enable_events=True,readonly=True)],
         
         [sg.Text('FEEDER \t\t',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CODIGO',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CALIBRACION',font=('Helvetica',15,'bold')),sg.Push(),sg.Push(),sg.Push()],
-        [sg.Input(font=('Helvetica',15),key='-DATA-', size=(21, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True,text_color="blue"),sg.Push(),sg.Push(),sg.Canvas(background_color='gray',size=(150,50),key='-CANVAC-'),sg.Button('Calibrar',font=('Helvetica',15),size=(10,1),key='-CALIB-',enable_events=True),sg.Push(),sg.Push(),sg.Push(),sg.Push()],
+        [sg.Input(font=('Helvetica',15),key='-DATA-', size=(21, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True,text_color="blue"),sg.Push(),sg.Push(),sg.Canvas(background_color='gold',size=(150,50),key='-CANVAC-'),sg.Button('Calibrar',font=('Helvetica',15),size=(7,1),key='-CALIB-',enable_events=True),sg.Button('Reset',font=('Helvetica',15),size=(5,1),key='-RESET-',enable_events=True),sg.Push(),sg.Push(),sg.Push()],
         
         [sg.Text("Status",font=('Helvetica',15,'bold'))],
-        [sg.Canvas(background_color='gray',size=(800,100),key='-CANVAG-')],
+        [sg.Canvas(background_color='gold',size=(800,100),key='-CANVAG-')],
         
         [sg.HSeparator()],
         [sg.Text("CP",font=('Helvetica',15)),sg.Combo(values=["N/A","OK"],font=('Helvetica',15),size=(5,1),key='-CP-',enable_events=True,readonly=True),sg.Text("\tBFC",font=('Helvetica',15)),sg.Combo(values=["N/A","OK"],font=('Helvetica',15),size=(5,1),key='-BFC-',enable_events=True,readonly=True),sg.Push(),sg.Text("Observaciones:\t\t",font=('Helvetica',15,'bold')),sg.Push()],
@@ -114,14 +114,15 @@ def app():
                     window["-CANVAC-"].update(background_color='lawn green')
                     window['-color-'].update(data_fecha)
                     window['-COLORF-'].update(data_fecha)
-                    window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
                     window['-ID_FEEDER-'].update(text_color='blue',disabled=True)
+                    window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
                     #window["-ID_feeder-"].update('')   
                 else:
                     window['-color-'].update(data_fecha)
                     window['-COLORF-'].update(data_fecha)
                     window["-CANVAG-"].update(background_color='red')
                     window["-CANVAC-"].update(background_color='red')
+                    window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
                     #sg.popup_error('Feeder fuera de mantenimiento!!')       
             if resultado == 0 or valor_de_celda == False:
                 window["-CANVAG-"].update(background_color='red')
@@ -138,10 +139,12 @@ def app():
             window['-color-'].update('')
             window['-TECH-'].update('')
             window['-OBS-'].update('')
-            window['-CANVAC-'].update(background_color='gray')
-            window['-CANVAG-'].update(background_color='gray')
+            window['-CANVAC-'].update(background_color='gold')
+            window['-CANVAG-'].update(background_color='gold')
             window['-DATA-'].update('')
-            
+            window['-INF_FEEDER-'].update('')
+            window['-ID_FEEDER-'].update(text_color='white',disabled=False)
+            window["-COLORF-"].update('N\A')
         def get_data():
             '''
             get_data():
@@ -166,6 +169,9 @@ def app():
 
         #*************\\ Eventos //*************
         #Manejo de errores para evitar bloqueo de app
+        if event == '-RESET-':
+            reset()
+        
         try:
             if event == '\r':
                 asyncio.run(check_status())
@@ -189,6 +195,8 @@ def app():
                     crear_plantilla.create_template(get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5])
                     generador = threading.Thread(target=reset,daemon=True)
                     generador.start()
+                    search_feeder.rellenar_rango_hasta_P("C:\\Users\\CECHEVARRIAMENDOZA\\OneDrive - Brunswick Corporation\\Documents\\Proyectos_Python\\PysimpleGUI\\Proyectos\\mantto_feeder\\data\\plan feeders SEM.csv",5,182,300,"OK")
+                    progress.progress_bar()
                     sg.popup('Reporte generado con exito!')
                     reset()
         except UnboundLocalError:
