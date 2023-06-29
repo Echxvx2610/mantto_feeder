@@ -57,19 +57,25 @@ def search_id(ID_FEEDER:int):
     if ID_FEEDER in df['ID_feeder'].values:
         #valores de index feeder y fecha "erroneos" solo para guiarse en CSV
         resultado = df.loc[df['ID_feeder'] == ID_FEEDER].to_string(index = False)
-        #Obtener index de feeder
-        valor_feeder = ID_FEEDER
-        indice_feeder = int(df['ID_feeder'].index[df['ID_feeder']==valor_feeder][0]) + 2
-        print("Indice feeder: ",indice_feeder)
-        #Obtener index de fecha
-        fecha_actual = datetime.now()
-        fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')
-        valor_fecha = fecha_formateada
-        indice_fecha = int(data_fecha[0].index[data_fecha[0]==valor_fecha][0]) + 1
-        print('Indice de fecha buscada: ',indice_fecha)
         id_feeder = resultado.split()
         descripcion = id_feeder[3]
-        return resultado   
+        return resultado
+    
+       
+#index feeder y fecha
+def index_ff(ID_FEEDER):
+    #Obtener index de feeder
+    valor_feeder = ID_FEEDER
+    indice_feeder = int(df['ID_feeder'].index[df['ID_feeder']==valor_feeder][0]) + 2
+
+#Obtener index de fecha
+    fecha_actual = datetime.now()
+    fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')
+    valor_fecha = fecha_formateada
+    indice_fecha = int(data_fecha[0].index[data_fecha[0]==valor_fecha][0]) + 1
+    return indice_feeder,indice_fecha
+
+
 
 #************************** Analisis de datos (plan feeders SEM )********************************
 def cell_value(ID_FEEDER:int):
@@ -94,13 +100,13 @@ def cell_value(ID_FEEDER:int):
             #Obtener index de feeder
             valor_feeder = ID_FEEDER
             indice_feeder = int(df['ID_feeder'].index[df['ID_feeder']==valor_feeder][0])
-            print("Indice feeder: ",indice_feeder + 2) # + 2 debido al index
+            #print("Indice feeder: ",indice_feeder + 2) # + 2 debido al index
             #Obtener index de fecha
             fecha_actual = datetime.now()
             fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')
             valor_fecha = fecha_formateada
             indice_fecha = int(data_fecha[0].index[data_fecha[0]==valor_fecha][0])
-            print('Indice de fecha buscada: ',indice_fecha + 1) # + 1 debido al index
+            #print('Indice de fecha buscada: ',indice_fecha + 1) # + 1 debido al index
 
             #comprobar si hay un OK en una interseccion data por el index de un feeder y el index de una fecha(funcionando)
             csv_data  = list(lector_csv)
@@ -150,6 +156,8 @@ def search_fecha(FECHA:str):
     color = index_fecha[3]
     return dia, color
 
+
+
 def rellenar_rango_hasta_P(fila, columna_inicio):
     '''
     rellenar_rango_hasta_P(fila, columna_inicio):
@@ -170,7 +178,7 @@ def rellenar_rango_hasta_P(fila, columna_inicio):
     '''
     try:
         # Abrir el archivo CSV en modo lectura
-        with open(r'C:\\Users\\CECHEVARRIAMENDOZA\\OneDrive - Brunswick Corporation\\Documents\\Proyectos_Python\\PysimpleGUI\\Proyectos\\mantto_feeder\\data\\plan feeders SEM2.csv', 'r') as archivo_csv:
+        with open(r'C:\\Users\\CECHEVARRIAMENDOZA\\OneDrive - Brunswick Corporation\\Documents\\Proyectos_Python\\PysimpleGUI\\Proyectos\\mantto_feeder\\data\\plan feeders SEM.csv', 'r') as archivo_csv:
             # Leer el archivo CSV
             filas = list(csv.reader(archivo_csv))
         """ Manejo de errrores
@@ -215,7 +223,7 @@ def rellenar_rango_hasta_P(fila, columna_inicio):
             fila_deseada[i] = "OK"
 
         # Guardar los cambios en el archivo CSV
-        with open(r"C:\\Users\\CECHEVARRIAMENDOZA\\OneDrive - Brunswick Corporation\\Documents\\Proyectos_Python\\PysimpleGUI\\Proyectos\\mantto_feeder\\data\\plan feeders SEM2.csv", 'w', newline='') as archivo_csv:
+        with open(r"C:\\Users\\CECHEVARRIAMENDOZA\\OneDrive - Brunswick Corporation\\Documents\\Proyectos_Python\\PysimpleGUI\\Proyectos\\mantto_feeder\\data\\plan feeders SEM.csv", 'w', newline='') as archivo_csv:
             escritor = csv.writer(archivo_csv)
             escritor.writerows(filas)
     except:
@@ -224,13 +232,20 @@ def rellenar_rango_hasta_P(fila, columna_inicio):
 
 
 #Quitar comentarios para testear
-#print("\n")
 fecha_actual = datetime.now()
 fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')   
 
+"""
+print("\nresultado search_id:\n",search_id(104575035)) #probar funcionamiento de funcion
+descripcion = ""
+for i in search_id(104575035).split()[3:]:
+    descripcion += i + " "
 
-#print("\nresultado search_id:\n",search_id(104575035)) #probar funcionamiento de funcion
-#print("\nresultado cell_value:",cell_value(104575035)) #probar funcionamiento de funcion
-#print("resultado search_fecha",search_fecha(fecha_formateada)[1]) #probando funcion para buscar fecha
+print("\nresultado descripcion:",descripcion)
+print("\nresultado cell_value:",cell_value(104575035)) #probar funcionamiento de funcion
+print("resultado search_fecha",search_fecha(fecha_formateada)[1]) #probando funcion para buscar fecha
 #rellenar_rango_hasta_P(5,182,300)
-rellenar_rango_hasta_P( 5, 8)
+#rellenar_rango_hasta_P( 5, 8)
+"""
+#print(index_ff(104575035)[0], index_ff(104575035)[1])
+#rellenar_rango_hasta_P(index_ff(104575035)[0], index_ff(104575035)[1])

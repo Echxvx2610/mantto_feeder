@@ -16,7 +16,8 @@ import os
             #--> Implementar Try/Except para evitar errores de tipo                                                                                                         [IN PROCESS]
             #--> Al copiar y rellenar plantilla se pierde imagen navico group (posible solucion,implementar shutil para copiar documento y editar en base a ese)            [IN PROCESS]
             #--> color de semana viene dado por csv mantto seq(trabajando en funcion para obtener fecha y color)                                                            [IN PROCESS]
-                    
+            #--> agregar logos a apps 
+            #--> color esta dado por el color del feeder y no por la fecha      
 
 def app():
     '''
@@ -70,7 +71,7 @@ def app():
         [sg.Input(font=('Helvetica',15),key='-INF_FEEDER-', size=(20, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text="N\A",font=('Helvetica',15),key='-color-', size=(10,20),readonly=True,text_color="blue"),sg.Push(),sg.Combo(values=["Francisco Rodriguez","Yamcha Cota","Efrain Ramirez"],font=('Helvetica',15),size=(30,1),key='-TECH-',enable_events=True,readonly=True)],
         
         [sg.Text('FEEDER \t\t',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CODIGO',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CALIBRACION',font=('Helvetica',15,'bold')),sg.Push(),sg.Push(),sg.Push()],
-        [sg.Input(font=('Helvetica',15),key='-DATA-', size=(21, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True,text_color="blue"),sg.Push(),sg.Push(),sg.Canvas(background_color='gold',size=(150,50),key='-CANVAC-'),sg.Button('Calibrar',font=('Helvetica',15),size=(7,1),key='-CALIB-',enable_events=True),sg.Button('Reset',font=('Helvetica',15),size=(5,1),key='-RESET-',enable_events=True),sg.Push(),sg.Push(),sg.Push()],
+        [sg.Input(font=('Helvetica',15),key='-DESCRIP-', size=(21, 50),readonly=True,text_color="blue",enable_events=True),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True,text_color="blue"),sg.Push(),sg.Push(),sg.Canvas(background_color='gold',size=(150,50),key='-CANVAC-'),sg.Button('Calibrar',font=('Helvetica',15),size=(7,1),key='-CALIB-',enable_events=True),sg.Button('Reset',font=('Helvetica',15),size=(5,1),key='-RESET-',enable_events=True),sg.Push(),sg.Push(),sg.Push()],
         
         [sg.Text("Status",font=('Helvetica',15,'bold'))],
         [sg.Canvas(background_color='gold',size=(800,100),key='-CANVAG-')],
@@ -96,33 +97,53 @@ def app():
             check_status():
                 Verifica si el feeder esta activo o con mantenimiento realizado
             '''
-            
+            #valor de interseccion
             valor_de_celda = search_feeder.cell_value(int(values['-ID_FEEDER-']))[0]
+            
             #buscar feeder por id
             resultado = search_feeder.search_id(int(values['-ID_FEEDER-']))
+            
+            #fecha formateada
             fecha_actual = datetime.now()
             fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')
             data_fecha = search_feeder.search_fecha(fecha_formateada)[1]
             
-            valor = valor_de_celda == "OK" or valor_de_celda == "P"
-            print(valor_de_celda == "OK" or valor_de_celda == "P")
-            print(data_fecha)
-            print(resultado)
+            #consultar valor de codigo en xlsx
+            codigo = valor_de_celda = search_feeder.cell_value(int(values['-ID_FEEDER-']))[2]
+            
+            #consultar color de feeder
+            color_feeder = search_feeder.cell_value(int(values['-ID_FEEDER-']))[1]
+            
+            #consultar descripcion de feeder
+            # El retorno de search_id se convierte en lista y tomamos del index 3 en adelante
+            # con el bucle for interamos sobre esa lista segun el tamaño y creamos una descripcion ajustable
+            descripcion = ""
+            for i in search_feeder.search_id(int(values['-ID_FEEDER-'])).split()[3:]:
+                descripcion += i + " "
+             
+            #impresiones de prueba
+            #print(descripcion)
+            #print(data_fecha)
+            #print(resultado)
+            #print(codigo)
             if resultado is not None:
-                if valor_de_celda == "OK" or valor_de_celda == "P":
+                if valor_de_celda == "OK":
                     window["-CANVAG-"].update(background_color='lawn green')
                     window["-CANVAC-"].update(background_color='lawn green')
-                    window['-color-'].update(data_fecha)
+                    window['-color-'].update(color_feeder)
                     window['-COLORF-'].update(data_fecha)
                     window['-ID_FEEDER-'].update(text_color='blue',disabled=True)
                     window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
-                    #window["-ID_feeder-"].update('')   
+                    window['-DESCRIP-'].update(descripcion)
+                    window['-DATA-'].update(codigo)
                 else:
-                    window['-color-'].update(data_fecha)
+                    window['-color-'].update(color_feeder)
                     window['-COLORF-'].update(data_fecha)
                     window["-CANVAG-"].update(background_color='red')
                     window["-CANVAC-"].update(background_color='red')
                     window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
+                    window['-DESCRIP-'].update(descripcion)
+                    window['-DATA-'].update(codigo)
                     #sg.popup_error('Feeder fuera de mantenimiento!!')       
             if resultado == 0 or valor_de_celda == False:
                 window["-CANVAG-"].update(background_color='red')
@@ -134,7 +155,7 @@ def app():
             reset():
                 Establece el color de los canvas a gris asi como el de los inputs en blanco
             '''
-            time.sleep(1 )
+            time.sleep(1)
             window['-ID_FEEDER-'].update('')
             window['-color-'].update('')
             window['-TECH-'].update('')
@@ -145,6 +166,19 @@ def app():
             window['-INF_FEEDER-'].update('')
             window['-ID_FEEDER-'].update(text_color='white',disabled=False)
             window["-COLORF-"].update('N\A')
+            window['-CP-'].update('')
+            window['-QP-'].update('')
+            window['-BFC-'].update('')
+            window['-HOVER-'].update('')
+            window['-CP-'].update(disabled=False)
+            window['-QP-'].update(disabled=False)
+            window['-BFC-'].update(disabled=False)
+            window['-HOVER-'].update(disabled=False)
+            window['-DESCRIP-'].update('')
+            
+            
+            
+            
         def get_data():
             '''
             get_data():
@@ -172,6 +206,12 @@ def app():
         if event == '-RESET-':
             reset()
         
+        if event in ['-CP-', '-QP-', '-BFC-', '-HOVER-']:
+            window['-CP-'].update(disabled=True)
+            window['-QP-'].update(disabled=True)
+            window['-BFC-'].update(disabled=True)
+            window['-HOVER-'].update(disabled=True)
+        
         try:
             if event == '\r':
                 asyncio.run(check_status())
@@ -193,10 +233,11 @@ def app():
                 else:
                     #Si todo lo anterior esta orden es decir se ha llenado toda la info se genera un reporte
                     crear_plantilla.create_template(get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5])
-                    generador = threading.Thread(target=reset,daemon=True)
-                    generador.start()
-                    search_feeder.rellenar_rango_hasta_P("C:\\Users\\CECHEVARRIAMENDOZA\\OneDrive - Brunswick Corporation\\Documents\\Proyectos_Python\\PysimpleGUI\\Proyectos\\mantto_feeder\\data\\plan feeders SEM.csv",5,182,300,"OK")
-                    progress.progress_bar()
+                    #rellena rango de celdas en xlsx
+                    search_feeder.rellenar_rango_hasta_P(search_feeder.index_ff(int(values['-ID_FEEDER-']))[0],search_feeder.index_ff(int(values['-ID_FEEDER-']))[1])
+                    reseteador = threading.Thread(target=reset,daemon=True)
+                    reseteador.start()
+                    #progress.progress_bar()
                     sg.popup('Reporte generado con exito!')
                     reset()
         except UnboundLocalError:
@@ -217,14 +258,15 @@ def app():
             sg.popup_get_file("Seleccione un archivo",file_types=(("Excel files", "*.xlsx"), ("All files", "*.*")))
         elif values['-MENU-'] == "About":
             title = "Contacto"
-            message = """-Created by: Cristian Echevarria,Version: 1.0\n-Email:cristianecheverriamendoza@gmail.com\n-Tel: 6462567733-Ensenada,B.C\n"""
+            message = """-Created by: Cristian Echevarria,Version: 1.0\n-Email:cristianecheverriamendoza@gmail.com"""
             sg.popup(message, title=title)
         elif values['-MENU-'] == "View":
             #abre app feeder_status
             #second_app = threading.Thread(target=feeder_status,daemon=True)
             #second_app.start()
             
-            # Ruta al archivo de Excel que deseas abrir
+            
+            # Ruta al archivo de Excel a abrir
             archivo_excel = r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv"
             # Comando para abrir el archivo con Excel
             comando_abrir_excel = f'start excel "{archivo_excel}"'
