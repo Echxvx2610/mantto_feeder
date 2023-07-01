@@ -4,8 +4,22 @@ import pandas as pd
 import openpyxl
 from openpyxl import workbook,load_workbook
 from openpyxl.utils import get_column_letter
-from openpyxl.styles import Font, Alignment, Border, Side
+#from openpyxl.styles import Font, Alignment, Border, Side
 from datetime import datetime,time
+import asyncio
+import tracemalloc
+"""
+#testeo de memoria tracemalloc
+tracemalloc.start()
+
+snapshot1 = tracemalloc.take_snapshot()
+"""
+    
+#*********************** Declarar fecha ************************
+fecha_actual = datetime.now()
+fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')   
+
+
 #*********************** Configuracion de dataframe(muestra todo el dataframe)********************
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
@@ -18,29 +32,32 @@ df = pd.DataFrame(data)
 df.rename(columns={'serie':'ID_feeder'},inplace=True)
 df.rename(columns={'feeder':'Feeder'},inplace=True)
 
-#apertura del archivo csv (plan feeders SEM)
-with open(r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as plan_semanal:
-    # Crea un lector CSV
-    lector_csv = csv.reader(plan_semanal)
-    # Obtiene la primera fila del archivo CSV
-    primera_fila = next(lector_csv)
 
-    # Obtiene los valores del rango A1:H1
-    valores_rango = primera_fila[0:1502]  # Índices de las columnas que tienen por nombre las fechas del año
-    '''
-    # Imprime los valores del rango
-    for valor in valores_rango:
-        print(valor)
-    '''
-    #Crear dataframe con los valores obtenidos del csv(columnas fechas)    
-    data_fecha = pd.DataFrame(valores_rango)
-
-with open(r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\mantto seq.csv") as mantto_seq:
-    #Crear un lector
-    lectura_mantto = csv.reader(mantto_seq)
-    data_mantto = pd.read_csv(r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\mantto seq.csv",encoding = "ISO-8859-1",usecols=['DIA','COLOR'])
-    df_mantto = pd.DataFrame(data_mantto)
-    #print(df_mantto)
+##apertura del archivo csv (plan feeders SEM)
+#with open(r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as plan_semanal:
+#    # Crea un lector CSV
+#    lector_csv = csv.reader(plan_semanal)
+#    # Obtiene la primera fila del archivo CSV
+#    primera_fila = next(lector_csv)
+#
+#    # Obtiene los valores del rango A1:H1
+#    valores_rango = primera_fila[0:1502]  # Índices de las columnas que tienen por nombre las fechas del año
+#    """
+#    # Imprime los valores del rango
+#    for valor in valores_rango:
+#        print(valor)
+#    """
+#    #Crear dataframe con los valores obtenidos del csv(columnas fechas)    
+#    data_fecha = pd.DataFrame(valores_rango)
+#    plan_semanal.close()
+#
+#with open(r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\mantto seq.csv") as mantto_seq:
+#    #Crear un lector
+#    lectura_mantto = csv.reader(mantto_seq)
+#    data_mantto = pd.read_csv(r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\mantto seq.csv",encoding = "ISO-8859-1",usecols=['DIA','COLOR'],low_memory=True)
+#    df_mantto = pd.DataFrame(data_mantto)
+#    #print(df_mantto)
+#    mantto_seq.close()
 
 def search_id(ID_FEEDER:int):
     '''
@@ -67,11 +84,20 @@ def index_ff(ID_FEEDER):
     #Obtener index de feeder
     valor_feeder = ID_FEEDER
     indice_feeder = int(df['ID_feeder'].index[df['ID_feeder']==valor_feeder][0]) + 2
+    
+    with open(r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as plan_semanal:
+        # Crea un lector CSV
+        lector_csv = csv.reader(plan_semanal)
+        # Obtiene la primera fila del archivo CSV
+        primera_fila = next(lector_csv)
 
-#Obtener index de fecha
-    fecha_actual = datetime.now()
-    fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')
-    valor_fecha = fecha_formateada
+        # Obtiene los valores del rango 
+        valores_rango = primera_fila[0:1502]  # Índices de las columnas que tienen por nombre las fechas del año
+        #Crear dataframe con los valores obtenidos del csv(columnas fechas)    
+        data_fecha = pd.DataFrame(valores_rango)
+        #Obtener index de fecha
+        valor_fecha = fecha_formateada
+    
     indice_fecha = int(data_fecha[0].index[data_fecha[0]==valor_fecha][0]) + 1
     return indice_feeder,indice_fecha
 
@@ -150,11 +176,16 @@ def search_fecha(FECHA:str):
             -Index fecha: index de fecha (posicion del dato en csv)
     '''
     #fecha en columna
-    index_fecha = df_mantto.loc[df_mantto['DIA'] == FECHA].to_string(index = False)
-    index_fecha = index_fecha.split()
-    dia = index_fecha[2]
-    color = index_fecha[3]
-    return dia, color
+    with open(r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\mantto seq.csv") as mantto_seq:
+        #Crear un lector
+        lectura_mantto = csv.reader(mantto_seq)
+        data_mantto = pd.read_csv(r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\mantto seq.csv",encoding = "ISO-8859-1",usecols=['DIA','COLOR'],low_memory=True)
+        df_mantto = pd.DataFrame(data_mantto)
+        index_fecha = df_mantto.loc[df_mantto['DIA'] == FECHA].to_string(index = False)
+        index_fecha = index_fecha.split()
+        dia = index_fecha[2]
+        color = index_fecha[3]
+        return dia, color
 
 
 
@@ -232,20 +263,30 @@ def rellenar_rango_hasta_P(fila, columna_inicio):
 
 
 #Quitar comentarios para testear
-fecha_actual = datetime.now()
-fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')   
-
-"""
-print("\nresultado search_id:\n",search_id(104575035)) #probar funcionamiento de funcion
-descripcion = ""
-for i in search_id(104575035).split()[3:]:
-    descripcion += i + " "
-
-print("\nresultado descripcion:",descripcion)
-print("\nresultado cell_value:",cell_value(104575035)) #probar funcionamiento de funcion
-print("resultado search_fecha",search_fecha(fecha_formateada)[1]) #probando funcion para buscar fecha
-#rellenar_rango_hasta_P(5,182,300)
-#rellenar_rango_hasta_P( 5, 8)
-"""
+#print("resultado search_id:\n",search_id(104575035)) #probar funcionamiento de funcion
+#descripcion = ""
+#for i in search_id(104575035).split()[3:]:
+#    descripcion += i + " "
+#
+#print("\nresultado descripcion:",descripcion)
+#print("\nresultado cell_value:",cell_value(104575035)) #probar funcionamiento de funcion
+#print("resultado search_fecha",search_fecha(fecha_formateada)[1]) #probando funcion para buscar fecha
+##rellenar_rango_hasta_P(5,182,300)
+##rellenar_rango_hasta_P( 5, 8)
 #print(index_ff(104575035)[0], index_ff(104575035)[1])
 #rellenar_rango_hasta_P(index_ff(104575035)[0], index_ff(104575035)[1])
+
+
+"""
+snapshot2 = tracemalloc.take_snapshot()
+differences = snapshot2.compare_to(snapshot1,'filename')
+
+for stat in differences[:10]:
+    print(stat)
+    
+#obtener la traza de un objeto especifico
+#remplana el objeto que deseas rastrear
+your_object = ...
+object_trace = tracemalloc.get_object_traceback(your_object)
+print(object_trace)
+"""

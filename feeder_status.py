@@ -2,7 +2,7 @@
 import PySimpleGUI as sg
 import time
 import asyncio
-from my_tools import search_feeder
+from my_tools import search_feeder, crear_plantilla
 
 #Reto: ingresar id solo con escanear y ejecutar despues
 
@@ -38,6 +38,7 @@ def feeder_status():
             window['-ID_feeder-'].update('')
             print(valor_intercecion)
         elif valor_intercecion == "":
+            window['-STATUS-'].update(status)
             window['-CANVA-'].update(background_color='red')
             window['-ID_feeder-'].update('')
             sg.popup_error('Feeder fuera de registro!!',title=':/')
@@ -55,7 +56,7 @@ def feeder_status():
         '''
         await check_status()
         window['-CANVA-'].update(background_color='red')
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(3)
         window['-ID_feeder-'].update('')
         window['-STATUS-'].update('')
     
@@ -72,7 +73,9 @@ def feeder_status():
         [sg.Canvas(background_color='gold',size=(300,300),key='-CANVA-',border_width=25)],
         ]
     
-    window = sg.Window('Mantto Feeder Status', layout,element_justification='center',return_keyboard_events=True)
+    window = sg.Window('Mantto Feeder Status',
+                       layout,element_justification='center',
+                       return_keyboard_events=True,icon = r'mantto_feeder\img\sem_ico.ico')
     while True:
         event, values = window.read(timeout=10)
         #print(event, values)
@@ -91,7 +94,7 @@ def feeder_status():
             sg.popup(message, title=title)
             window['-ID_feeder-'].update('')
 
-        #****************************************************************************************       
+        #**********************************************************************************************************************       
     window.close()
       
 if __name__ == '__main__':

@@ -65,7 +65,7 @@ def app():
         [sg.Menu(menu_layout,key='-MENU-')],
         [sg.Image(r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-'),sg.Push()],
         [sg.Text('COLOR DE LA SEMANA',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('DATA\t\t',font=('Helvetica',15,'bold')),sg.Push()],
-        [sg.Input(default_text="N\A",font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-ID_FEEDER-',readonly=False,text_color='white',size=(20, 50)),sg.Push()],
+        [sg.Input(default_text="N\A",font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-ID_FEEDER-',readonly=False,text_color='white',enable_events=True,size=(20, 50)),sg.Push()],
         
         [sg.Text('ID_Feeder',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('\tCOLOR:',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('TECNICO \t\t',font=('Helvetica',15,'bold')),sg.Push()],
         [sg.Input(font=('Helvetica',15),key='-INF_FEEDER-', size=(20, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text="N\A",font=('Helvetica',15),key='-color-', size=(10,20),readonly=True,text_color="blue"),sg.Push(),sg.Combo(values=["Francisco Rodriguez","Yamcha Cota","Efrain Ramirez"],font=('Helvetica',15),size=(30,1),key='-TECH-',enable_events=True,readonly=True)],
@@ -137,6 +137,8 @@ def app():
                 window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
                 window['-DESCRIP-'].update(descripcion)
                 window['-DATA-'].update(codigo)
+                #window['-ID_FEEDER-'].Disable()
+                
             else:
                 window['-color-'].update(color_feeder)
                 window['-COLORF-'].update(data_fecha)
@@ -146,13 +148,18 @@ def app():
                 window['-ID_FEEDER-'].update(disabled=True,text_color='blue')
                 window['-DESCRIP-'].update(descripcion)
                 window['-DATA-'].update(codigo)
-                #sg.popup_error('Feeder fuera de mantenimiento!!')   
+                #window['-ID_FEEDER-'].Disable()
+                #sg.popup_error('Feeder fuera de mantenimiento!!')
+            
+            
         
         def reset():
             '''
             reset():
                 Establece el color de los canvas a gris asi como el de los inputs en blanco
             '''
+            #window['-ID_FEEDER-'].EnableEvents(True)
+            #window['-ID_FEEDER-'].Window_configuration(enable_events=True)
             window['-ID_FEEDER-'].update('')
             window['-color-'].update('')
             window['-TECH-'].update('')
@@ -209,13 +216,23 @@ def app():
             window['-BFC-'].update(disabled=True)
             window['-HOVER-'].update(disabled=True)
         
-        try:
-            if event == '\r':
-                asyncio.run(check_status())
-        except:
-            title = "Excepcion!"
-            message = """-! Ocurrio un error.\nAsegurese de haber introduccido el ID del feeder correctamente"""
-            sg.popup(message, title=title)
+        #variable para controlar que esta condicion se ejecute sola una vez
+        #se_ejecuta = False
+        
+        if len(values['-ID_FEEDER-']) == 9: #and se_ejecuta == False:
+            #asyncio.run(check_status())
+            asyncio.run(check_status())
+            se_ejecuta = True
+            
+    
+        #try:
+        #    if len(values['-ID_FEEDER-']) == 9:
+        #        asyncio.run(check_status())
+        #except:
+        #    title = "Excepcion!"
+        #    message = """-! Ocurrio un error.\nAsegurese de haber introduccido el ID del feeder correctamente"""
+        #    sg.popup(message, title=title)
+        
         try:
             #Obtener datos de GUI   
             if event == '-CALIB-':
@@ -232,9 +249,11 @@ def app():
                     crear_plantilla.create_template(get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5])
                     #rellena rango de celdas en xlsx
                     search_feeder.rellenar_rango_hasta_P(search_feeder.index_ff(int(values['-ID_FEEDER-']))[0],search_feeder.index_ff(int(values['-ID_FEEDER-']))[1])
+                    reseteador = threading.Thread(target=reset,daemon=True)
+                    reseteador.start()
                     #progress.progress_bar()
-                    reset()
                     sg.popup('Reporte generado con exito!')
+                    reset()
         except UnboundLocalError:
             title = "Excepcion!"
             message = """-! Ocurrio un error.\nAsegurese de haber introduccido el ID del feeder o haber seleccionado un tipo de feeder"""
