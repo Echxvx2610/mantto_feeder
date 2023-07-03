@@ -7,7 +7,7 @@ def progress_bar():
             [sg.ProgressBar(200, orientation='h', size=(20, 20), key='-PROGBAR-')]],
     window = sg.Window('Working...', layout,no_titlebar=True, grab_anywhere=True)
     for i in range(200):
-        event, values = window.read(timeout=10)
+        event, values = window.read(timeout=1)
         if event == 'Cancel' or event == sg.WIN_CLOSED:
             break
         window['-PROGBAR-'].update_bar(i + 1)

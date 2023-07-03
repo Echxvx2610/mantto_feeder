@@ -9,7 +9,11 @@ from datetime import datetime
 Nombre_Tecnico = "Cristian Echevarria"
 ID_Feeder = 23760055
 Tipo_Feeder = "OK"
-Fecha_Mantenimiento = "31/05/2023"
+fecha_actual = datetime.now()
+dia = fecha_actual.day
+mes = fecha_actual.strftime('%b')
+año = fecha_actual.year
+Fecha_Mantenimiento = "{:02b}_{}_{}".format(dia,mes,año)
 Color_Semana = "ROJO"
 
 #evaluar posible cambio a Clase
@@ -94,4 +98,4 @@ def create_template(Nombre_Tecnico, ID_Feeder, Tipo_Feeder, Fecha_Mantenimiento,
     #print(create_template().__doc__)
 
 #create_template(Nombre_Tecnico, ID_Feeder,Tipo_Feeder,Fecha_Mantenimiento, Color_Semana)
-#create_template("Cristian Mendoza", 23760056, "QP", "31/05/2023", "AZUL","Feeder con mantenimiento atrasado")
+#create_template("Cristian Mendoza", 23760056, "QP", Fecha_Mantenimiento, "AZUL","Feeder con mantenimiento atrasado")

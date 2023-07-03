@@ -13,12 +13,13 @@ import os
 
 
 #***************************************************\\ ISSUES //***************************************************
-            #--> Implementar Try/Except para evitar errores de tipo                                                                                                         [IN PROCESS]
+            #--> Implementar Try/Except para evitar errores de tipo                                                                                                         [SUCCESS]
             #--> Al copiar y rellenar plantilla se pierde imagen navico group (posible solucion,implementar shutil para copiar documento y editar en base a ese)            [IN PROCESS]
-            #--> color de semana viene dado por csv mantto seq(trabajando en funcion para obtener fecha y color)                                                            [IN PROCESS]
-            #--> agregar logos a apps 
-            #--> color esta dado por el color del feeder y no por la fecha      
-
+            #--> color de semana viene dado por csv mantto seq(trabajando en funcion para obtener fecha y color)                                                            [SUCCESS]
+            #--> agregar logos a apps                                                                                                                                       [SUCCESS]
+            #--> color esta dado por el color del feeder y no por la fecha                                                                                                  [SUCCESS]
+            #--> interfaz login (maybe)
+#***************************************************************************************************************
 def app():
     '''
     Funcion principal de la aplicacion mantto_feeder,esta aplicacion trabaja 
@@ -37,10 +38,11 @@ def app():
                     -Nombre_Tecnico: Nombre del tecnico
                     -ID_Feeder: ID del feeder
                     -Tipo_Feeder: [CP,QP,BFC,HOVER]
+                    -Fecha = Fecha de mantenimiento
                 --funcionamiento:
                     -Toma los datos de los argumentos anteriormente mecionados
                     y se los pasa como parametros a la funcion create_template() traida
-                    del script crear_plantilla.py
+                    del modulo crear_plantilla.py
             - reset():
                 --argumentos:
                     -Nombre_Tecnico: Nombre del tecnico
@@ -53,6 +55,7 @@ def app():
     '''
     #***************************************************\\ CONFIGURACION //***************************************************
     sg.theme('LightGrey') #tema de la aplicacion    
+    #layout del menu
     menu_layout = [
         ['File', ['Open','View','Exit']],
         ['Help','About'],
@@ -82,7 +85,7 @@ def app():
         [sg.Text("Created by:Cristian Echevarria",font=('Helvetica',6,'italic'))],
         ]
     
-    window = sg.Window('Manto Feeder Main', layout,element_justification='center',return_keyboard_events=True)
+    window = sg.Window('Manto Feeder Main', layout,element_justification='center',return_keyboard_events=True,icon=r"mantto_feeder\img\mantto.ico")
     while True:
         event, values = window.read()
         #print(event, values)
@@ -91,77 +94,75 @@ def app():
         
         
         
-        #*************\\ Funciones //*************
+        #**********************************************\\ Funciones //****************************************************
         async def check_status():
             '''
             check_status():
                 Verifica si el feeder esta activo o con mantenimiento realizado
             '''
-            #valor de interseccion
-            valor_de_celda = search_feeder.cell_value(int(values['-ID_FEEDER-']))[0]
-            
-            #buscar feeder por id
-            resultado = search_feeder.search_id(int(values['-ID_FEEDER-']))
-            
-            #fecha formateada
-            fecha_actual = datetime.now()
-            fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')
-            data_fecha = search_feeder.search_fecha(fecha_formateada)[1]
-            
-            #consultar valor de codigo en xlsx
-            codigo = search_feeder.cell_value(int(values['-ID_FEEDER-']))[2]
-            
-            #consultar color de feeder
-            color_feeder = search_feeder.cell_value(int(values['-ID_FEEDER-']))[1]
-            
-            #consultar descripcion de feeder
-            # El retorno de search_id se convierte en lista y tomamos del index 3 en adelante
-            # con el bucle for interamos sobre esa lista segun el tamaño y creamos una descripcion ajustable
-            descripcion = ""
-            for i in search_feeder.search_id(int(values['-ID_FEEDER-'])).split()[3:]:
-                descripcion += i + " "
-             
-           #consultar descripcion de feeder
-            # El retorno de search_id se convierte en lista y tomamos del index 3 en adelante
-            # con el bucle for interamos sobre esa lista segun el tamaño y creamos una descripcion ajustable
-            descripcion = ""
-            for i in search_feeder.search_id(int(values['-ID_FEEDER-'])).split()[3:]:
-                descripcion += i + " "
-            
-            if valor_de_celda == "OK":
-                window['-ID_FEEDER-'].update(text_color='blue',disabled=True)
-                window["-CANVAG-"].update(background_color='lawn green')
-                window["-CANVAC-"].update(background_color='lawn green')
-                window['-color-'].update(color_feeder)
-                window['-COLORF-'].update(data_fecha)
-                window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
-                window['-DESCRIP-'].update(descripcion)
-                window['-DATA-'].update(codigo)
-                #window['-ID_FEEDER-'].Disable()
+            try:
+                #buscar feeder por id(en archivo Plan Semanal.xlsx)
+                resultado = search_feeder.search_id(int(values['-ID_FEEDER-']))
+                #valor de interseccion(ID_FEEDER * fecha)
+                valor_de_celda = search_feeder.cell_value(int(values['-ID_FEEDER-']))[0]
+                #consultar valor de codigo en xlsx
+                codigo = search_feeder.cell_value(int(values['-ID_FEEDER-']))[2]
+                #consultar color de feeder
+                color_feeder = search_feeder.cell_value(int(values['-ID_FEEDER-']))[1]
+                #Fecha formateada(MM/DD/YYYY)
+                fecha_actual = datetime.now()
+                fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')
+                #buscamos el color de la semana dada la fecha en el archivo mantto seq.csv
+                data_fecha = search_feeder.search_fecha(fecha_formateada)[1]
+                #consultar descripcion de feeder
+                # El retorno de search_id se convierte en lista y tomamos del index 3 en adelante
+                # con el bucle for interamos sobre esa lista segun el tamaño y creamos una descripcion ajustable
+                descripcion = ""
+                for i in search_feeder.search_id(int(values['-ID_FEEDER-'])).split()[3:]:
+                    descripcion += i + " "
+                    
+                if valor_de_celda == "OK":
+                    #window['-ID_FEEDER-'].update(text_color='blue',disabled=True)
+                    window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
+                    window['-ID_FEEDER-'].update("")
+                    window['-ID_FEEDER-'].update(disabled=True)
+                    window["-CANVAG-"].update(background_color='lawn green')
+                    window["-CANVAC-"].update(background_color='lawn green')
+                    window['-color-'].update(color_feeder)
+                    window['-COLORF-'].update(data_fecha)
+                    window['-DESCRIP-'].update(descripcion)
+                    window['-DATA-'].update(codigo)
                 
-            else:
-                window['-color-'].update(color_feeder)
-                window['-COLORF-'].update(data_fecha)
-                window["-CANVAG-"].update(background_color='red')
-                window["-CANVAC-"].update(background_color='red')
-                window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
-                window['-ID_FEEDER-'].update(disabled=True,text_color='blue')
-                window['-DESCRIP-'].update(descripcion)
-                window['-DATA-'].update(codigo)
-                #window['-ID_FEEDER-'].Disable()
-                #sg.popup_error('Feeder fuera de mantenimiento!!')
+                
+                else:
+                    window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
+                    window['-ID_FEEDER-'].update("")
+                    window['-ID_FEEDER-'].update(disabled=True,text_color='blue')
+                    window['-color-'].update(color_feeder)
+                    window['-COLORF-'].update(data_fecha)
+                    window["-CANVAG-"].update(background_color='red')
+                    window["-CANVAC-"].update(background_color='red')
+                    window['-DESCRIP-'].update(descripcion)
+                    window['-DATA-'].update(codigo)
+                    #sg.popup_error('Feeder fuera de mantenimiento!!')
+                    
+            except ValueError:
+                title = "Excepcion!"
+                message = """-! El ID del feeder debe ser un valor numerico\n Asegurese de haber introduccido el ID del feeder correctamente!"""
+                asyncio.run(reset())
+                sg.popup(message, title=title)
+                
+
             
             
         
-        def reset():
+        async def reset():
             '''
             reset():
-                Establece el color de los canvas a gris asi como el de los inputs en blanco
+                Establece el color de los canvas a amarillo asi como el de los inputs en blanco
             '''
-            #window['-ID_FEEDER-'].EnableEvents(True)
-            #window['-ID_FEEDER-'].Window_configuration(enable_events=True)
             window['-ID_FEEDER-'].update('')
-            window['-color-'].update('')
+            window['-color-'].update('N\A')
             window['-TECH-'].update('')
             window['-OBS-'].update('')
             window['-CANVAC-'].update(background_color='gold')
@@ -196,8 +197,8 @@ def app():
                 Tipo_Feeder = "BFC"
             if values['-HOVER-'] == "OK":
                 Tipo_Feeder = "HO0VER"
-            id_feeder = values['-ID_FEEDER-'] #toma el valor del input DATA
-            window['-INF_FEEDER-'].update(id_feeder) #actualiza el input ID_FEEDER
+            id_feeder = values['-INF_FEEDER-'] #toma el valor del ID_FEEDER
+            #window['-INF_FEEDER-'].update(id_feeder) #actualiza el input ID_FEEDER
             #copy_id = values['-ID_FEEDER-'] #toma el valor del input ID_FEEDER
             color_f = values['-color-']
             tecnico = values['-TECH-'] #toma el valor del input TECNICO        
@@ -208,7 +209,7 @@ def app():
         #*************\\ Eventos //*************
         #Manejo de errores para evitar bloqueo de app
         if event == '-RESET-':
-            reset()
+            asyncio.run(reset())
         
         if event in ['-CP-', '-QP-', '-BFC-', '-HOVER-']:
             window['-CP-'].update(disabled=True)
@@ -216,23 +217,9 @@ def app():
             window['-BFC-'].update(disabled=True)
             window['-HOVER-'].update(disabled=True)
         
-        #variable para controlar que esta condicion se ejecute sola una vez
-        #se_ejecuta = False
-        
-        if len(values['-ID_FEEDER-']) == 9: #and se_ejecuta == False:
-            #asyncio.run(check_status())
+        if len(values['-ID_FEEDER-']) == 9:
             asyncio.run(check_status())
-            se_ejecuta = True
             
-    
-        #try:
-        #    if len(values['-ID_FEEDER-']) == 9:
-        #        asyncio.run(check_status())
-        #except:
-        #    title = "Excepcion!"
-        #    message = """-! Ocurrio un error.\nAsegurese de haber introduccido el ID del feeder correctamente"""
-        #    sg.popup(message, title=title)
-        
         try:
             #Obtener datos de GUI   
             if event == '-CALIB-':
@@ -243,30 +230,28 @@ def app():
                 #validamos que no falte ningun dato
                 primer_dato,segundo_dato,tercer_dato,cuarto_dato,quinto_dato,sexto_dato = get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5]    
                 if primer_dato == '' or segundo_dato == '' or tercer_dato == '' or cuarto_dato == '' or quinto_dato == '' or sexto_dato == '':
-                    sg.popup('Faltan datos por llenar')
+                    sg.popup_error('Faltan datos por llenar!')
                 else:
                     #Si todo lo anterior esta orden es decir se ha llenado toda la info se genera un reporte
                     crear_plantilla.create_template(get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5])
                     #rellena rango de celdas en xlsx
-                    search_feeder.rellenar_rango_hasta_P(search_feeder.index_ff(int(values['-ID_FEEDER-']))[0],search_feeder.index_ff(int(values['-ID_FEEDER-']))[1])
-                    reseteador = threading.Thread(target=reset,daemon=True)
-                    reseteador.start()
-                    #progress.progress_bar()
+                    search_feeder.rellenar_rango_hasta_P(search_feeder.index_ff(int(values['-INF_FEEDER-']))[0],search_feeder.index_ff(int(values['-INF_FEEDER-']))[1])
+                    progress.progress_bar()
                     sg.popup('Reporte generado con exito!')
-                    reset()
+                    asyncio.run(reset())
+                    
         except UnboundLocalError:
             title = "Excepcion!"
             message = """-! Ocurrio un error.\nAsegurese de haber introduccido el ID del feeder o haber seleccionado un tipo de feeder"""
             sg.popup(message, title=title)
         except ValueError:
             title = "Excepcion!"
-            message = """-! Ocurrio un error al leer el ID del feeder.\nAsegurese de haber introduccido el ID del feeder o haber seleccionado un tipo de feeder\nEl ID debe ser numérico!!"""
+            message = """-! Ocurrio un error al leer el ID del feeder.\nAsegurese de haber introduccido el ID del feeder correctamente!"""
             sg.popup(message, title=title)
         except:
             title = "Excepcion!"
             message = """-!Ocurrio un error al procesar los datos.\nAntes de comenzar escanee el ID del feeder.\nSi el problema consiste contacta al Equipo de MFG."""
             sg.popup(message, title=title)
-
         #Eventos de menu
         if values['-MENU-'] == "Open":
             sg.popup_get_file("Seleccione un archivo",file_types=(("Excel files", "*.xlsx"), ("All files", "*.*")))

@@ -26,83 +26,55 @@ pd.set_option('display.max_rows', None)
 pd.set_option('display.width', None)
 
 #***************************** Creacion de un dataframe ********************************
-data = pd.read_csv(r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv',encoding='ISO-8859-1',usecols=['serie','feeder'])
+#data = pd.read_csv(r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv',encoding='ISO-8859-1',usecols=['serie','feeder'])
+data = pd.read_csv(r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\plan feeders SEM.csv',encoding='ISO-8859-1',usecols=['serie','feeder']) #ruta oficial de documento
 df = pd.DataFrame(data)
 #**************************** Renombrar columnas ********************************
 df.rename(columns={'serie':'ID_feeder'},inplace=True)
 df.rename(columns={'feeder':'Feeder'},inplace=True)
 
-
-##apertura del archivo csv (plan feeders SEM)
-#with open(r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as plan_semanal:
-#    # Crea un lector CSV
-#    lector_csv = csv.reader(plan_semanal)
-#    # Obtiene la primera fila del archivo CSV
-#    primera_fila = next(lector_csv)
-#
-#    # Obtiene los valores del rango A1:H1
-#    valores_rango = primera_fila[0:1502]  # Índices de las columnas que tienen por nombre las fechas del año
-#    """
-#    # Imprime los valores del rango
-#    for valor in valores_rango:
-#        print(valor)
-#    """
-#    #Crear dataframe con los valores obtenidos del csv(columnas fechas)    
-#    data_fecha = pd.DataFrame(valores_rango)
-#    plan_semanal.close()
-#
-#with open(r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\mantto seq.csv") as mantto_seq:
-#    #Crear un lector
-#    lectura_mantto = csv.reader(mantto_seq)
-#    data_mantto = pd.read_csv(r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\mantto seq.csv",encoding = "ISO-8859-1",usecols=['DIA','COLOR'],low_memory=True)
-#    df_mantto = pd.DataFrame(data_mantto)
-#    #print(df_mantto)
-#    mantto_seq.close()
+#print(df)
 
 def search_id(ID_FEEDER:int):
-    '''
-    search_id(ID_FEEDER:int)
-        toma como parametro el id del feeder,mismo que sera proporcionado por la app feeder status
-        mediante el escaneo de los feeders.
-        retorna: un dataframe con todos los datos del feeder ( ID_feeder, Feeder )  
-        
-        extra:
-            -Index ID_feeder: index de ID_feeder(posicion del dato en csv)
-            -Index fecha: index de fecha (posicion del dato en csv)
-    '''
-    #buscar feeder por id
-    if ID_FEEDER in df['ID_feeder'].values:
-        #valores de index feeder y fecha "erroneos" solo para guiarse en CSV
-        resultado = df.loc[df['ID_feeder'] == ID_FEEDER].to_string(index = False)
-        id_feeder = resultado.split()
-        descripcion = id_feeder[3]
-        return resultado
-    
+     '''
+     search_id(ID_FEEDER:int)
+         toma como parametro el id del feeder,mismo que sera proporcionado por la app feeder status
+         mediante el escaneo de los feeders.
+         retorna: un dataframe con todos los datos del feeder ( ID_feeder, Feeder )  
        
+         extra:
+             -Index ID_feeder: index de ID_feeder(posicion del dato en csv)
+             -Index fecha: index de fecha (posicion del dato en csv)
+     '''
+     #buscar feeder por id
+     if ID_FEEDER in df['ID_feeder'].values:
+         #valores de index feeder y fecha "erroneos" solo para guiarse en CSV
+         resultado = df.loc[df['ID_feeder'] == ID_FEEDER].to_string(index = False)
+         id_feeder = resultado.split()
+         descripcion = id_feeder[3]
+         return resultado
+  
+     
 #index feeder y fecha
 def index_ff(ID_FEEDER):
     #Obtener index de feeder
     valor_feeder = ID_FEEDER
     indice_feeder = int(df['ID_feeder'].index[df['ID_feeder']==valor_feeder][0]) + 2
-    
-    with open(r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as plan_semanal:
+  
+    with open(r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\plan feeders SEM.csv', 'r') as plan_semanal: #ruta oficial de documento
         # Crea un lector CSV
         lector_csv = csv.reader(plan_semanal)
         # Obtiene la primera fila del archivo CSV
         primera_fila = next(lector_csv)
-
         # Obtiene los valores del rango 
         valores_rango = primera_fila[0:1502]  # Índices de las columnas que tienen por nombre las fechas del año
         #Crear dataframe con los valores obtenidos del csv(columnas fechas)    
         data_fecha = pd.DataFrame(valores_rango)
         #Obtener index de fecha
         valor_fecha = fecha_formateada
-    
+  
     indice_fecha = int(data_fecha[0].index[data_fecha[0]==valor_fecha][0]) + 1
     return indice_feeder,indice_fecha
-
-
-
 #************************** Analisis de datos (plan feeders SEM )********************************
 def cell_value(ID_FEEDER:int):
     '''
@@ -111,14 +83,14 @@ def cell_value(ID_FEEDER:int):
     '''
     #cargar archivo excel
     # Abre el archivo CSV en modo lectura
-    with open(r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv', 'r') as plan_semanal:
+    with open(r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\plan feeders SEM.csv','r') as plan_semanal:#ruta oficial de documento
         # Crea un lector CSV
         lector_csv = csv.reader(plan_semanal)
         # Obtiene la primera fila del archivo CSV
         primera_fila = next(lector_csv)
         # Obtiene los valores del rango A1:H1
         valores_rango = primera_fila[0:1502]  # Índices de las columnas que tienen por nombre las fechas del año
-    
+  
         #Crear dataframe con los valores obtenidos del csv(columnas)    
         data_fecha = pd.DataFrame(valores_rango)
         try:
@@ -133,7 +105,6 @@ def cell_value(ID_FEEDER:int):
             valor_fecha = fecha_formateada
             indice_fecha = int(data_fecha[0].index[data_fecha[0]==valor_fecha][0])
             #print('Indice de fecha buscada: ',indice_fecha + 1) # + 1 debido al index
-
             #comprobar si hay un OK en una interseccion data por el index de un feeder y el index de una fecha(funcionando)
             csv_data  = list(lector_csv)
             fila = indice_feeder #al index deseado restarle 2 por conflicto con index
@@ -146,21 +117,18 @@ def cell_value(ID_FEEDER:int):
                 interseccion_fecha = csv_data[fila][columna_fecha]
             else:
                 print("No se encontro valor interseccion")
-
             #Obtener valor de interseccion con columna color
             if fila < len(csv_data) and columna_color < len(csv_data[0]):
                 #obtener valor de interseccion
                 interseccion_color = csv_data[fila][columna_color]
             else:
                 print("No se encontro valor interseccion")
-
             #Obtener valor de interseccion con columna codigo
             if fila < len(csv_data) and columna_codigo < len(csv_data[0]):
                 #obtener valor de interseccion
                 interseccion_codigo = csv_data[fila][columna_codigo]
             else:
                 print("No se encontro valor interseccion")
-
             return interseccion_fecha, interseccion_color, interseccion_codigo
         except:
             return 0, 0, 0
@@ -170,46 +138,43 @@ def search_fecha(FECHA:str):
         toma como parametro el id del feeder,mismo que sera proporcionado por la app feeder status
         mediante el escaneo de los feeders.
         retorna: un dataframe con todos los datos del feeder ( ID_feeder, Feeder )  
-        
+      
         extra:
             -Index ID_feeder: index de ID_feeder(posicion del dato en csv)
             -Index fecha: index de fecha (posicion del dato en csv)
     '''
     #fecha en columna
-    with open(r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\mantto seq.csv") as mantto_seq:
+    with open(r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\mantto seq.csv') as mantto_seq:#ruta oficial de documento
         #Crear un lector
         lectura_mantto = csv.reader(mantto_seq)
-        data_mantto = pd.read_csv(r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\mantto seq.csv",encoding = "ISO-8859-1",usecols=['DIA','COLOR'],low_memory=True)
+        data_mantto = pd.read_csv(r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\mantto seq.csv',encoding = "ISO-8859-1",usecols=['DIA','COLOR'],low_memory=True)#ruta oficial de documento
         df_mantto = pd.DataFrame(data_mantto)
         index_fecha = df_mantto.loc[df_mantto['DIA'] == FECHA].to_string(index = False)
         index_fecha = index_fecha.split()
         dia = index_fecha[2]
         color = index_fecha[3]
         return dia, color
-
-
-
 def rellenar_rango_hasta_P(fila, columna_inicio):
     '''
     rellenar_rango_hasta_P(fila, columna_inicio):
         rellena con 'OK' un rango de columnas hasta que encuentra una P
-        
+      
         parametros:
             -fila: es el index del feeder
             -columna_inicio: es el index de la columna de la fecha actual
-            
+          
         condiciones:
             -Verificar si la fila existe en el rango de filas del archivo CSV
             -Verificar si la columna de inicio está dentro del rango de la fila
             -Verificar si la columna de fin está dentro del rango de la fila
             -Rellena un rango de columnas con OK apartir de la interseccion de la fecha y el id del feeder
             -Al iniciar a rellenar si detecta varias P de manera consecutiva,las cuenta y si son iguales o menores a 15,las sobreescribe y se detiene en la proxima P
-            
-    
+          
+  
     '''
     try:
         # Abrir el archivo CSV en modo lectura
-        with open(r'C:\\Users\\CECHEVARRIAMENDOZA\\OneDrive - Brunswick Corporation\\Documents\\Proyectos_Python\\PysimpleGUI\\Proyectos\\mantto_feeder\\data\\plan feeders SEM.csv', 'r') as archivo_csv:
+        with open(r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\plan feeders SEM.csv', 'r') as archivo_csv:#ruta oficial de documento
             # Leer el archivo CSV
             filas = list(csv.reader(archivo_csv))
         """ Manejo de errrores
@@ -217,23 +182,19 @@ def rellenar_rango_hasta_P(fila, columna_inicio):
         if fila - 1 >= len(filas):
             print(f"La fila {fila} está fuera del rango de filas del archivo CSV.")
             return
-
         # Verificar si la columna de inicio está dentro del rango de la fila
         if columna_inicio - 1 >= len(fila_deseada):
             print(f"La columna {columna_inicio} está fuera del rango de la fila {fila}.")
             return
-
         # Verificar si la columna de fin está dentro del rango de la fila
         if columna_fin - 1 >= len(fila_deseada):
             print(f"La columna {columna_fin} está fuera del rango de la fila {fila}.")
             return
         """
-
         # Obtener la fila deseada
         fila_deseada = filas[fila - 1]
         # Declarar la columna final
         columna_fin = len(fila_deseada)
-
         #Contar celdas consecutivas con valor "P" hasta un máximo de 15
         p_consecutivas = 0
         for i in range(columna_inicio - 1, columna_fin):
@@ -243,23 +204,21 @@ def rellenar_rango_hasta_P(fila, columna_inicio):
                    fila_deseada[i] = "OK"
             else:
                 break
-            
+          
         # Rellenar celdas consecutivas con valor "OK" hasta la próxima celda con valor "P"
         for i in range(columna_inicio - 1, columna_fin):
             # Verificar si el valor de la celda es igual a 'P'
             if fila_deseada[i] == 'P':
                 break  # Si encuentra 'P', se detiene el bucle
-            
+          
             # Rellenar la celda con el valor deseado
             fila_deseada[i] = "OK"
-
         # Guardar los cambios en el archivo CSV
-        with open(r"C:\\Users\\CECHEVARRIAMENDOZA\\OneDrive - Brunswick Corporation\\Documents\\Proyectos_Python\\PysimpleGUI\\Proyectos\\mantto_feeder\\data\\plan feeders SEM.csv", 'w', newline='') as archivo_csv:
+        with open(r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\plan feeders SEM.csv', 'w', newline='') as archivo_csv:#ruta oficial de documento
             escritor = csv.writer(archivo_csv)
             escritor.writerows(filas)
     except:
         print("El Archivo se encuentra abierto!!")
-
 
 
 #Quitar comentarios para testear
@@ -267,14 +226,14 @@ def rellenar_rango_hasta_P(fila, columna_inicio):
 #descripcion = ""
 #for i in search_id(104575035).split()[3:]:
 #    descripcion += i + " "
-#
+
 #print("\nresultado descripcion:",descripcion)
 #print("\nresultado cell_value:",cell_value(104575035)) #probar funcionamiento de funcion
 #print("resultado search_fecha",search_fecha(fecha_formateada)[1]) #probando funcion para buscar fecha
-##rellenar_rango_hasta_P(5,182,300)
-##rellenar_rango_hasta_P( 5, 8)
+###rellenar_rango_hasta_P(5,182,300)
+###rellenar_rango_hasta_P( 5, 8)
 #print(index_ff(104575035)[0], index_ff(104575035)[1])
-#rellenar_rango_hasta_P(index_ff(104575035)[0], index_ff(104575035)[1])
+rellenar_rango_hasta_P(index_ff(104575032)[0], index_ff(104575032)[1])
 
 
 """
