@@ -37,7 +37,7 @@ print(info.__doc__)
 
 
 # Nombre del archivo Excel
-nombre_excel = r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\mantto_feeder.xlsx'
+nombre_excel = r'mantto_feeder\openpy.xlsx'
 
 try:
     # Intentar cargar el archivo existente
@@ -163,6 +163,6 @@ celda_interseccion.value = "OK"
 #***************************** GUARDAR Y CERRAR ARCHIVO ****************************     
 #nuevo_nombre = "MF-64_23760055.xls"
 # Guardar y cerrar el archivo
-workbook.save(r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\mantto_feeder.xlsx")
+workbook.save(r"mantto_feeder\openpy_edited.xlsx")
 workbook.close()
 

@@ -2,7 +2,7 @@
 import PySimpleGUI as sg
 import time
 import asyncio
-from my_tools import search_feeder, crear_plantilla
+from tools import search_feeder, crear_plantilla
 
 #Reto: ingresar id solo con escanear y ejecutar despues
 
@@ -70,7 +70,7 @@ def feeder_status():
         [sg.Text('ID_feeder:',font=('Avenir Next LT Pro Demi',15)),sg.Input(key='-ID_feeder-',size=(20,50),enable_events=True)],
         [sg.Text("Datos Feeder:",font=('Avenir Next LT Pro Demi',12,'bold'))],
         [sg.Text('',font=('Avenir Next LT Pro Demi',9,'bold'),key='-STATUS-')],
-        [sg.Canvas(background_color='gold',size=(300,300),key='-CANVA-',border_width=25)],
+        [sg.Canvas(background_color='gold',size=(200,300),key='-CANVA-',border_width=25)],
         ]
     
     window = sg.Window('Mantto Feeder Status',
@@ -90,7 +90,7 @@ def feeder_status():
             window['-CANVA-'].update(background_color='red')
             window['-STATUS-'].update('')
             title = "Excepción!!"
-            message = """-Ocurrio un error al consultar el estado del feeder.\nSi el problema persiste, contacte a MFG"""
+            message = """-Ocurrio un error al consultar el estado del feeder.\nSi el problema persiste, contacte a Ing.Procesos"""
             sg.popup(message, title=title)
             window['-ID_feeder-'].update('')
 

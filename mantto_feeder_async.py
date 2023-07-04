@@ -2,7 +2,7 @@
 import PySimpleGUI as sg
 from threading import *
 import threading
-from my_tools import crear_plantilla,search_feeder,progress
+from tools import crear_plantilla,search_feeder,progress
 from datetime import datetime,time
 import subprocess
 import shutil
@@ -66,7 +66,7 @@ def app():
     layout = [
         #menu
         [sg.Menu(menu_layout,key='-MENU-')],
-        [sg.Image(r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-'),sg.Push()],
+        [sg.Image(r'mantto_feeder\img\LOGO_NAVICO_1_90-black.png',expand_x=False,expand_y=False,enable_events=True,key='-LOGO-'),sg.Push()],
         [sg.Text('COLOR DE LA SEMANA',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('DATA\t\t',font=('Helvetica',15,'bold')),sg.Push()],
         [sg.Input(default_text="N\A",font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-ID_FEEDER-',readonly=False,text_color='white',enable_events=True,size=(20, 50)),sg.Push()],
         
@@ -202,7 +202,11 @@ def app():
             #copy_id = values['-ID_FEEDER-'] #toma el valor del input ID_FEEDER
             color_f = values['-color-']
             tecnico = values['-TECH-'] #toma el valor del input TECNICO        
-            fecha = datetime.now().strftime('%d/%m/%Y')
+            fecha_actual = datetime.now()
+            dia = fecha_actual.day
+            mes = fecha_actual.strftime('%b')
+            año = fecha_actual.year
+            fecha = "{}{}{}".format(dia,mes,año)
             observaciones = values['-OBS-']
             return tecnico,id_feeder,Tipo_Feeder,fecha,color_f,observaciones
 
