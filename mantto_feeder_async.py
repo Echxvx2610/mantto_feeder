@@ -2,7 +2,7 @@
 import PySimpleGUI as sg
 from threading import *
 import threading
-from tools import crear_plantilla,search_feeder,progress
+from tools import crear_plantilla,search_feeder,progress,loggin
 from datetime import datetime,time
 import subprocess
 import shutil
@@ -18,9 +18,10 @@ import os
             #--> color de semana viene dado por csv mantto seq(trabajando en funcion para obtener fecha y color)                                                            [SUCCESS]
             #--> agregar logos a apps                                                                                                                                       [SUCCESS]
             #--> color esta dado por el color del feeder y no por la fecha                                                                                                  [SUCCESS]
-            #--> interfaz login (maybe)
+            #--> interfaz login (maybe)                                                                                                                                     [SUCCESS]
 #***************************************************************************************************************
 def app():
+    #loggin.login() quitar comentario para implementar sistema de loggin
     '''
     Funcion principal de la aplicacion mantto_feeder,esta aplicacion trabaja 
     en conjunto con la app feder_status.py
