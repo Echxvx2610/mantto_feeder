@@ -36,7 +36,7 @@ def feeder_status():
             window['-CANVA-'].update(background_color='lawn green')
             window['-STATUS-'].update(status)
             window['-ID_feeder-'].update('')
-            print(valor_intercecion)
+            #print(valor_intercecion)
         elif valor_intercecion == "":
             window['-STATUS-'].update(status)
             window['-CANVA-'].update(background_color='red')
@@ -45,7 +45,7 @@ def feeder_status():
         else:
             window['-CANVA-'].update(background_color='red')
             window['-ID_feeder-'].update('')
-            print(valor_intercecion)
+            #print(valor_intercecion)
             
         
     async def reset_status():

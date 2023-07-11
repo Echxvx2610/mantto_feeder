@@ -5,18 +5,13 @@ from openpyxl.styles import Font, Alignment, Border, Side
 from datetime import datetime
 
 
-#Definir o pasar parametros
-Nombre_Tecnico = "Cristian Echevarria"
-ID_Feeder = 23760055
-Tipo_Feeder = "OK"
+#Definir formato de fecha
 fecha_actual = datetime.now()
 dia = fecha_actual.day
 mes = fecha_actual.strftime('%b')
 año = fecha_actual.year
 Fecha_Mantenimiento = "{}{}{}".format(dia,mes,año)
-Color_Semana = "ROJO"
 
-#evaluar posible cambio a Clase
 def create_template(Nombre_Tecnico, ID_Feeder, Tipo_Feeder, Fecha_Mantenimiento, Color_Semana,Observaciones):
     '''
     Funcionamiento basico:
@@ -31,7 +26,7 @@ def create_template(Nombre_Tecnico, ID_Feeder, Tipo_Feeder, Fecha_Mantenimiento,
         -Fecha de mantenimiento
         -Color de semana
     '''
-    nombre_excel = r'mantto_feeder\data\MF-64_plantilla.xlsx'
+    nombre_excel = r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\MF-64_plantilla.xlsx'
     
     try:
         # Intentar cargar el archivo existente

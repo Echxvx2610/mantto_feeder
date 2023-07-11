@@ -2,7 +2,7 @@
 import PySimpleGUI as sg
 from threading import *
 import threading
-from tools import crear_plantilla,search_feeder,progress,loggin
+from tools import crear_plantilla,search_feeder,progress,loggin,validar
 from datetime import datetime,time
 import subprocess
 import shutil
@@ -21,7 +21,6 @@ import os
             #--> interfaz login (maybe)                                                                                                                                     [SUCCESS]
 #***************************************************************************************************************
 def app():
-    #loggin.login() quitar comentario para implementar sistema de loggin
     '''
     Funcion principal de la aplicacion mantto_feeder,esta aplicacion trabaja 
     en conjunto con la app feder_status.py
@@ -58,8 +57,8 @@ def app():
     sg.theme('LightGrey') #tema de la aplicacion    
     #layout del menu
     menu_layout = [
-        ['File', ['Open','View','Exit']],
-        ['Help','About'],
+        #['File', ['Open','View','Exit']],
+        ['Help','About']
     ]
     
     #***************************************************\\ LAYOUT //***************************************************
@@ -72,7 +71,7 @@ def app():
         [sg.Input(default_text="N\A",font=('Helvetica',15),key='-COLORF-', size=(25,200),readonly=True,text_color="blue"),sg.Push(),sg.Input(font=('Helvetica',15),key='-ID_FEEDER-',readonly=False,text_color='white',enable_events=True,size=(20, 50)),sg.Push()],
         
         [sg.Text('ID_Feeder',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('\tCOLOR:',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('TECNICO \t\t',font=('Helvetica',15,'bold')),sg.Push()],
-        [sg.Input(font=('Helvetica',15),key='-INF_FEEDER-', size=(20, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text="N\A",font=('Helvetica',15),key='-color-', size=(10,20),readonly=True,text_color="blue"),sg.Push(),sg.Combo(values=["Francisco Rodriguez","Yamcha Cota","Efrain Ramirez"],font=('Helvetica',15),size=(30,1),key='-TECH-',enable_events=True,readonly=True)],
+        [sg.Input(font=('Helvetica',15),key='-INF_FEEDER-', size=(20, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text="N\A",font=('Helvetica',15),key='-color-', size=(10,20),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text="N\A",font=('Helvetica',15),key='-TECH-',readonly=True,text_color='blue',enable_events=True,size=(35, 50))],
         
         [sg.Text('FEEDER \t\t',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CODIGO',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CALIBRACION',font=('Helvetica',15,'bold')),sg.Push(),sg.Push(),sg.Push()],
         [sg.Input(font=('Helvetica',15),key='-DESCRIP-', size=(21, 50),readonly=True,text_color="blue",enable_events=True),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True,text_color="blue"),sg.Push(),sg.Push(),sg.Canvas(background_color='gold',size=(150,50),key='-CANVAC-'),sg.Button('Calibrar',font=('Helvetica',15),size=(7,1),key='-CALIB-',enable_events=True),sg.Button('Reset',font=('Helvetica',15),size=(5,1),key='-RESET-',enable_events=True),sg.Push(),sg.Push(),sg.Push()],
@@ -93,6 +92,11 @@ def app():
         if event == sg.WIN_CLOSED:
             break    
         
+        #loggin.login()
+        #if inicio_exitoso == True:
+        #    pass
+        #else:
+        #    break   #quitar comentario para implementar sistema de loggin
         
         
         #**********************************************\\ Funciones //****************************************************
@@ -123,7 +127,6 @@ def app():
                     descripcion += i + " "
                     
                 if valor_de_celda == "OK":
-                    #window['-ID_FEEDER-'].update(text_color='blue',disabled=True)
                     window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
                     window['-ID_FEEDER-'].update("")
                     window['-ID_FEEDER-'].update(disabled=True)
@@ -145,14 +148,12 @@ def app():
                     window["-CANVAC-"].update(background_color='red')
                     window['-DESCRIP-'].update(descripcion)
                     window['-DATA-'].update(codigo)
-                    #sg.popup_error('Feeder fuera de mantenimiento!!')
                     
             except ValueError:
                 title = "Excepcion!"
                 message = """-! El ID del feeder debe ser un valor numerico\n Asegurese de haber introduccido el ID del feeder correctamente!"""
                 asyncio.run(reset())
                 sg.popup(message, title=title)
-                
 
             
             
@@ -164,7 +165,7 @@ def app():
             '''
             window['-ID_FEEDER-'].update('')
             window['-color-'].update('N\A')
-            window['-TECH-'].update('')
+            window['-TECH-'].update('N\A')
             window['-OBS-'].update('')
             window['-CANVAC-'].update(background_color='gold')
             window['-CANVAG-'].update(background_color='gold')
@@ -182,9 +183,24 @@ def app():
             window['-HOVER-'].update(disabled=False)
             window['-DESCRIP-'].update('')
             
-            
-            
-            
+        def check_tech():
+            a = False
+            while a == False:
+                usuario = sg.PopupGetText("Numero de empleado:",title='Validar numero de empleado')
+                resultado = validar.user(usuario)
+                window['-TECH-'].update(resultado)
+                if resultado is not None:
+                    a = True
+                    return resultado
+                else:
+                    sg.popup_error('Usuario no valido')
+                    respuesta = sg.popup_yes_no("Volver a intentar?")
+                    if respuesta == "Yes":
+                        a = False
+                    else:
+                        a = True
+                        
+                
         def get_data():
             '''
             get_data():
@@ -202,7 +218,9 @@ def app():
             #window['-INF_FEEDER-'].update(id_feeder) #actualiza el input ID_FEEDER
             #copy_id = values['-ID_FEEDER-'] #toma el valor del input ID_FEEDER
             color_f = values['-color-']
-            tecnico = values['-TECH-'] #toma el valor del input TECNICO        
+            #tecnico = values['-TECH-'] #toma el valor del input TECNICO        
+            #window['-TECH-'].update(validar.user())
+            tecnico = values['-TECH-']
             fecha_actual = datetime.now()
             dia = fecha_actual.day
             mes = fecha_actual.strftime('%b')
@@ -210,7 +228,8 @@ def app():
             fecha = "{}{}{}".format(dia,mes,año)
             observaciones = values['-OBS-']
             return tecnico,id_feeder,Tipo_Feeder,fecha,color_f,observaciones
-
+        
+        
         #*************\\ Eventos //*************
         #Manejo de errores para evitar bloqueo de app
         if event == '-RESET-':
@@ -222,26 +241,37 @@ def app():
             window['-BFC-'].update(disabled=True)
             window['-HOVER-'].update(disabled=True)
         
-        if len(values['-ID_FEEDER-']) == 9:
-            asyncio.run(check_status())
-            
+        try:
+            if len(values['-ID_FEEDER-']) == 9:
+                asyncio.run(check_status())
+        except:
+            message = """-! El ID del feeder debe ser un valor numerico\n Asegurese de haber introduccido el ID del feeder correctamente!"""
+            title = "Excepcion!"
+            window['-ID_FEEDER-'].update('')
+            sg.popup(message, title=title)
         try:
             #Obtener datos de GUI   
             if event == '-CALIB-':
-                #print(values)
-                print(get_data()) #revisar que valores tomo la funcion get_data
-                get_data()
+                #check_tech()
+                datos = get_data()
                 #Crear plantilla
                 #validamos que no falte ningun dato
+                """
                 primer_dato,segundo_dato,tercer_dato,cuarto_dato,quinto_dato,sexto_dato = get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5]    
                 if primer_dato == '' or segundo_dato == '' or tercer_dato == '' or cuarto_dato == '' or quinto_dato == '' or sexto_dato == '':
                     sg.popup_error('Faltan datos por llenar!')
+                    print(get_data()) #revisar que valores tomo la funcion get_data
+                """
+                if any(dato == '' for dato in get_data()):
+                    sg.popup_error('Faltan datos por llenar!')
+                    print(get_data()) #revisar que valores tomo la funcion get_data
                 else:
                     #Si todo lo anterior esta orden es decir se ha llenado toda la info se genera un reporte
-                    crear_plantilla.create_template(get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5])
+                    crear_plantilla.create_template(check_tech(),get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5])
                     #rellena rango de celdas en xlsx
                     search_feeder.rellenar_rango_hasta_P(search_feeder.index_ff(int(values['-INF_FEEDER-']))[0],search_feeder.index_ff(int(values['-INF_FEEDER-']))[1])
                     progress.progress_bar()
+                    #print(get_data()) #revisar que valores tomo la funcion get_data
                     sg.popup('Reporte generado con exito!')
                     asyncio.run(reset())
                     
@@ -258,25 +288,25 @@ def app():
             message = """-!Ocurrio un error al procesar los datos.\nAntes de comenzar escanee el ID del feeder.\nSi el problema consiste contacta al Equipo de MFG."""
             sg.popup(message, title=title)
         #Eventos de menu
-        if values['-MENU-'] == "Open":
-            sg.popup_get_file("Seleccione un archivo",file_types=(("Excel files", "*.xlsx"), ("All files", "*.*")))
-        elif values['-MENU-'] == "About":
+        # if values['-MENU-'] == "Open":
+        #     sg.popup_get_file("Seleccione un archivo",file_types=(("Excel files", "*.xlsx"), ("All files", "*.*")))
+        if values['-MENU-'] == "About":
             title = "Contacto"
             message = """-Created by: Cristian Echevarria,Version: 1.0\n-Email:cristianecheverriamendoza@gmail.com"""
             sg.popup(message, title=title)
-        elif values['-MENU-'] == "View":
-            #abre app feeder_status
-            #second_app = threading.Thread(target=feeder_status,daemon=True)
-            #second_app.start()
+        # elif values['-MENU-'] == "View":
+        #     #abre app feeder_status
+        #     #second_app = threading.Thread(target=feeder_status,daemon=True)
+        #     #second_app.start()
             
             
-            # Ruta al archivo de Excel a abrir
-            archivo_excel = r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv"
-            # Comando para abrir el archivo con Excel
-            comando_abrir_excel = f'start excel "{archivo_excel}"'
+        #     # Ruta al archivo de Excel a abrir
+        #     archivo_excel = r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv"
+        #     # Comando para abrir el archivo con Excel
+        #     comando_abrir_excel = f'start excel "{archivo_excel}"'
 
-            # Ejecutar el comando para abrir el archivo con Excel
-            os.system(comando_abrir_excel)
+        #     # Ejecutar el comando para abrir el archivo con Excel
+        #     os.system(comando_abrir_excel)
                                 
     window.close()  
 
@@ -284,3 +314,4 @@ def app():
 
 if __name__ == '__main__':
     app()
+    

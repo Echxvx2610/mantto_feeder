@@ -32,10 +32,10 @@ def login():
             # Verificar el usuario y contraseña ingresados
             if values['-USER-'] in usuarios and str(values['-PASSWORD-']) == str(usuarios[values['-USER-']]):
                 #sg.popup('Inicio de sesión exitoso')
+                inicio_exitoso = True
                 break
             else:
                 sg.popup_error('Usuario o contraseña incorrectos')
-
     window.close()
 
 if __name__ == '__main__':
