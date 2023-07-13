@@ -57,7 +57,7 @@ def app():
     sg.theme('LightGrey') #tema de la aplicacion    
     #layout del menu
     menu_layout = [
-        #['File', ['Open','View','Exit']],
+        ['File', ['Open','View','Exit']],
         ['Help','About']
     ]
     
@@ -107,13 +107,13 @@ def app():
             '''
             try:
                 #buscar feeder por id(en archivo Plan Semanal.xlsx)
-                resultado = search_feeder.search_id(int(values['-ID_FEEDER-']))
+                resultado = search_feeder.search_id(values['-ID_FEEDER-'])
                 #valor de interseccion(ID_FEEDER * fecha)
-                valor_de_celda = search_feeder.cell_value(int(values['-ID_FEEDER-']))[0]
+                valor_de_celda = search_feeder.cell_value(values['-ID_FEEDER-'])[0]
                 #consultar valor de codigo en xlsx
-                codigo = search_feeder.cell_value(int(values['-ID_FEEDER-']))[2]
+                codigo = search_feeder.cell_value(values['-ID_FEEDER-'])[2]
                 #consultar color de feeder
-                color_feeder = search_feeder.cell_value(int(values['-ID_FEEDER-']))[1]
+                color_feeder = search_feeder.cell_value(values['-ID_FEEDER-'])[1]
                 #Fecha formateada(MM/DD/YYYY)
                 fecha_actual = datetime.now()
                 fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')
@@ -123,7 +123,7 @@ def app():
                 # El retorno de search_id se convierte en lista y tomamos del index 3 en adelante
                 # con el bucle for interamos sobre esa lista segun el tamaño y creamos una descripcion ajustable
                 descripcion = ""
-                for i in search_feeder.search_id(int(values['-ID_FEEDER-'])).split()[3:]:
+                for i in search_feeder.search_id(values['-ID_FEEDER-']).split()[3:]:
                     descripcion += i + " "
                     
                 if valor_de_celda == "OK":
@@ -288,25 +288,24 @@ def app():
             message = """-!Ocurrio un error al procesar los datos.\nAntes de comenzar escanee el ID del feeder.\nSi el problema consiste contacta al Equipo de MFG."""
             sg.popup(message, title=title)
         #Eventos de menu
-        # if values['-MENU-'] == "Open":
-        #     sg.popup_get_file("Seleccione un archivo",file_types=(("Excel files", "*.xlsx"), ("All files", "*.*")))
+        if values['-MENU-'] == "Open":
+            sg.popup_get_file("Seleccione un archivo",file_types=(("Excel files", "*.xlsx"), ("All files", "*.*")))
         if values['-MENU-'] == "About":
             title = "Contacto"
             message = """-Created by: Cristian Echevarria,Version: 1.0\n-Email:cristianecheverriamendoza@gmail.com"""
             sg.popup(message, title=title)
-        # elif values['-MENU-'] == "View":
-        #     #abre app feeder_status
-        #     #second_app = threading.Thread(target=feeder_status,daemon=True)
-        #     #second_app.start()
-            
-            
-        #     # Ruta al archivo de Excel a abrir
-        #     archivo_excel = r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv"
-        #     # Comando para abrir el archivo con Excel
-        #     comando_abrir_excel = f'start excel "{archivo_excel}"'
-
-        #     # Ejecutar el comando para abrir el archivo con Excel
-        #     os.system(comando_abrir_excel)
+        elif values['-MENU-'] == "View":
+            #abre app feeder_status
+            #second_app = threading.Thread(target=feeder_status,daemon=True)
+            #second_app.start()
+        
+        
+            # Ruta al archivo de Excel a abrir
+            archivo_excel = r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv"
+            # Comando para abrir el archivo con Excel
+            comando_abrir_excel = f'start excel "{archivo_excel}"'
+            # Ejecutar el comando para abrir el archivo con Excel
+            os.system(comando_abrir_excel)
                                 
     window.close()  
 

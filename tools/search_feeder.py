@@ -27,15 +27,16 @@ pd.set_option('display.width', None)
 
 #***************************** Creacion de un dataframe ********************************
 #data = pd.read_csv(r'C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv',encoding='ISO-8859-1',usecols=['serie','feeder'])
-data = pd.read_csv(r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\plan feeders SEM.csv',encoding='ISO-8859-1',usecols=['serie','feeder']) #ruta oficial de documento
+data = pd.read_csv(r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\plan feeders SEM.csv',encoding='ISO-8859-1',usecols=['serie','feeder'],low_memory=False) #ruta oficial de documento
 df = pd.DataFrame(data)
+
 #**************************** Renombrar columnas ********************************
 df.rename(columns={'serie':'ID_feeder'},inplace=True)
 df.rename(columns={'feeder':'Feeder'},inplace=True)
 
 #print(df)
 
-def search_id(ID_FEEDER:int):
+def search_id(ID_FEEDER):
      '''
      search_id(ID_FEEDER:int)
          toma como parametro el id del feeder,mismo que sera proporcionado por la app feeder status
@@ -141,13 +142,13 @@ def search_fecha(FECHA:str):
       
         extra:
             -Index ID_feeder: index de ID_feeder(posicion del dato en csv)
-            -Index fecha: index de fecha (posicion del dato en csv)
+            -Index fecha: index de fecha (posicion del dato en csv)s
     '''
     #fecha en columna
     with open(r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\mantto seq.csv') as mantto_seq:#ruta oficial de documento
         #Crear un lector
         lectura_mantto = csv.reader(mantto_seq)
-        data_mantto = pd.read_csv(r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\mantto seq.csv',encoding = "ISO-8859-1",usecols=['DIA','COLOR'],low_memory=True)#ruta oficial de documento
+        data_mantto = pd.read_csv(r'H:\Ingenieria\Ensamble PCB\Documentacion ISO-9001\mantto seq.csv',encoding = "ISO-8859-1",usecols=['DIA','COLOR'],low_memory=False)#ruta oficial de documento
         df_mantto = pd.DataFrame(data_mantto)
         index_fecha = df_mantto.loc[df_mantto['DIA'] == FECHA].to_string(index = False)
         index_fecha = index_fecha.split()
@@ -222,18 +223,18 @@ def rellenar_rango_hasta_P(fila, columna_inicio):
 
 
 #Quitar comentarios para testear
-#print("resultado search_id:\n",search_id(104575035)) #probar funcionamiento de funcion
+#print("resultado search_id:\n",search_id("104575712")) #probar funcionamiento de funcion
 #descripcion = ""
-#for i in search_id(104575035).split()[3:]:
+#for i in search_id("105372953").split()[3:]:
 #    descripcion += i + " "
-
+#
 #print("\nresultado descripcion:",descripcion)
-#print("\nresultado cell_value:",cell_value(104575035)) #probar funcionamiento de funcion
+#print("\nresultado cell_value:",cell_value("104575035")) #probar funcionamiento de funcion
 #print("resultado search_fecha",search_fecha(fecha_formateada)[1]) #probando funcion para buscar fecha
 ###rellenar_rango_hasta_P(5,182,300)
 ###rellenar_rango_hasta_P( 5, 8)
 #print(index_ff(104575035)[0], index_ff(104575035)[1])
-rellenar_rango_hasta_P(index_ff(104575032)[0], index_ff(104575032)[1])
+#rellenar_rango_hasta_P(index_ff(104575032)[0], index_ff(104575032)[1])
 
 
 """

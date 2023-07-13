@@ -29,8 +29,8 @@ def feeder_status():
             revisa el estado del feeder y actualiza el valor del background_color del canvas
             **hace una consulta en el registro excel de los feeders
         '''
-        valores = search_feeder.cell_value(int(values['-ID_feeder-']))
-        status = search_feeder.search_id(int(values['-ID_feeder-']))
+        valores = search_feeder.cell_value(values['-ID_feeder-'])
+        status = search_feeder.search_id(values['-ID_feeder-'])
         valor_intercecion = valores[0]
         if valor_intercecion == "OK":
             window['-CANVA-'].update(background_color='lawn green')
