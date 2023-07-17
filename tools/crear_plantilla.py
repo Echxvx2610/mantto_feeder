@@ -2,8 +2,10 @@ import openpyxl
 import pandas as pd
 from openpyxl import workbook
 from openpyxl.styles import Font, Alignment, Border, Side
+from openpyxl.drawing.image import Image
+from openpyxl.utils.dataframe import dataframe_to_rows
 from datetime import datetime
-
+import shutil
 
 #Definir formato de fecha
 fecha_actual = datetime.now()
@@ -42,7 +44,6 @@ def create_template(Nombre_Tecnico, ID_Feeder, Tipo_Feeder, Fecha_Mantenimiento,
     alignment = Alignment(horizontal='center', vertical='center')
     alignment_left = Alignment(horizontal='left', vertical='center')
     #*******************fusion de celdas*************************
-    
     #fecha
     hoja.merge_cells("B12:C12")
     #tenico
@@ -53,6 +54,13 @@ def create_template(Nombre_Tecnico, ID_Feeder, Tipo_Feeder, Fecha_Mantenimiento,
     hoja.merge_cells("F14:G14")
     #observaciones 
     hoja.merge_cells("A65:H86")
+    #iamgen
+    hoja.merge_cells("C4:E5")
+    
+    #********************************* Imagen ***********************
+    img = Image('mantto_feeder\img\LOGO_NAVICO_1_90-black.png')
+    #hoja.add_image(img, "C4")
+
     
     #******************** Rellenar celdas ***********************
     hoja["B12"].value = Fecha_Mantenimiento
@@ -93,4 +101,4 @@ def create_template(Nombre_Tecnico, ID_Feeder, Tipo_Feeder, Fecha_Mantenimiento,
     #print(create_template().__doc__)
 
 #create_template(Nombre_Tecnico, ID_Feeder,Tipo_Feeder,Fecha_Mantenimiento, Color_Semana)
-#create_template("Cristian Mendoza", 23760056, "QP", Fecha_Mantenimiento, "AZUL","Feeder con mantenimiento atrasado")
+create_template("Cristian Mendoza", 23760056, "QP", Fecha_Mantenimiento, "AZUL","Feeder con mantenimiento atrasado")

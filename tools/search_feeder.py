@@ -223,12 +223,12 @@ def rellenar_rango_hasta_P(fila, columna_inicio):
 
 
 #Quitar comentarios para testear
-#print("resultado search_id:\n",search_id("104575712")) #probar funcionamiento de funcion
-#descripcion = ""
-#for i in search_id("105372953").split()[3:]:
-#    descripcion += i + " "
-#
-#print("\nresultado descripcion:",descripcion)
+print("resultado search_id:\n",search_id(105372777)) #probar funcionamiento de funcion
+descripcion = ""
+for i in search_id(105372953).split()[3:]:
+    descripcion += i + " "
+
+print("\nresultado descripcion:",descripcion)
 #print("\nresultado cell_value:",cell_value("104575035")) #probar funcionamiento de funcion
 #print("resultado search_fecha",search_fecha(fecha_formateada)[1]) #probando funcion para buscar fecha
 ###rellenar_rango_hasta_P(5,182,300)

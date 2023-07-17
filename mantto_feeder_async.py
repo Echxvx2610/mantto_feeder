@@ -107,13 +107,13 @@ def app():
             '''
             try:
                 #buscar feeder por id(en archivo Plan Semanal.xlsx)
-                resultado = search_feeder.search_id(values['-ID_FEEDER-'])
+                resultado = search_feeder.search_id(int(values['-ID_FEEDER-']))
                 #valor de interseccion(ID_FEEDER * fecha)
-                valor_de_celda = search_feeder.cell_value(values['-ID_FEEDER-'])[0]
+                valor_de_celda = search_feeder.cell_value(int(values['-ID_FEEDER-']))[0]
                 #consultar valor de codigo en xlsx
-                codigo = search_feeder.cell_value(values['-ID_FEEDER-'])[2]
+                codigo = search_feeder.cell_value(int(values['-ID_FEEDER-']))[2]
                 #consultar color de feeder
-                color_feeder = search_feeder.cell_value(values['-ID_FEEDER-'])[1]
+                color_feeder = search_feeder.cell_value(int(values['-ID_FEEDER-']))[1]
                 #Fecha formateada(MM/DD/YYYY)
                 fecha_actual = datetime.now()
                 fecha_formateada = fecha_actual.strftime(f'{fecha_actual.month}/{fecha_actual.day}/{fecha_actual.year}')
@@ -123,7 +123,7 @@ def app():
                 # El retorno de search_id se convierte en lista y tomamos del index 3 en adelante
                 # con el bucle for interamos sobre esa lista segun el tamaño y creamos una descripcion ajustable
                 descripcion = ""
-                for i in search_feeder.search_id(values['-ID_FEEDER-']).split()[3:]:
+                for i in search_feeder.search_id(int(values['-ID_FEEDER-'])).split()[3:]:
                     descripcion += i + " "
                     
                 if valor_de_celda == "OK":
