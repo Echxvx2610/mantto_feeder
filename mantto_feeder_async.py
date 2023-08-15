@@ -82,7 +82,7 @@ def app():
         [sg.HSeparator()],
         [sg.Text("CP",font=('Helvetica',15)),sg.Combo(values=["N/A","OK"],font=('Helvetica',15),size=(5,1),key='-CP-',enable_events=True,readonly=True),sg.Text("\tBFC",font=('Helvetica',15)),sg.Combo(values=["N/A","OK"],font=('Helvetica',15),size=(5,1),key='-BFC-',enable_events=True,readonly=True),sg.Push(),sg.Text("Observaciones:\t\t",font=('Helvetica',15,'bold')),sg.Push()],
         [sg.Text("QP",font=('Helvetica',15)),sg.Combo(values=["N/A","OK"],font=('Helvetica',15),size=(5,1),key='-QP-',enable_events=True,readonly=True),sg.Text("\tHOVER",font=('Helvetica',15)),sg.Combo(values=["N/A","OK"],font=('Helvetica',15),size=(5,1),key='-HOVER-',enable_events=True,readonly=True),sg.Push(),sg.Multiline("" ,size=(50 ,5) ,no_scrollbar=True ,enable_events=True,key='-OBS-'),sg.Push()],
-        [sg.Text("Created by:Cristian Echevarria",font=('Helvetica',6,'italic'))],
+        [sg.Text("Created by:Cristian Echevarria",font=('Helvetica',8,'italic'))],
         ]
     
     window = sg.Window('Manto Feeder Main', layout,element_justification='center',return_keyboard_events=True,icon=r"mantto_feeder\img\mantto.ico")
@@ -172,7 +172,7 @@ def app():
             window['-DATA-'].update('')
             window['-INF_FEEDER-'].update('')
             window['-ID_FEEDER-'].update(text_color='white',disabled=False)
-            window["-COLORF-"].update('N\A')
+            #window["-COLORF-"].update('N\A')
             window['-CP-'].update('')
             window['-QP-'].update('')
             window['-BFC-'].update('')
