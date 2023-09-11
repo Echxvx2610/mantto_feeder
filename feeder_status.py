@@ -43,7 +43,7 @@ def feeder_status():
             window['-ID_feeder-'].update('')
             sg.popup_error('Feeder fuera de registro!!',title=':/')
         else:
-            window['-CANVA-'].update(background_color='red')
+            window['-CANVA-'].update(background_color='lawn green')
             window['-ID_feeder-'].update('')
             #print(valor_intercecion)
             

@@ -13,12 +13,7 @@ import os
 
 
 #***************************************************\\ ISSUES //***************************************************
-            #--> Implementar Try/Except para evitar errores de tipo                                                                                                         [SUCCESS]
-            #--> Al copiar y rellenar plantilla se pierde imagen navico group (posible solucion,implementar shutil para copiar documento y editar en base a ese)            [IN PROCESS]
-            #--> color de semana viene dado por csv mantto seq(trabajando en funcion para obtener fecha y color)                                                            [SUCCESS]
-            #--> agregar logos a apps                                                                                                                                       [SUCCESS]
-            #--> color esta dado por el color del feeder y no por la fecha                                                                                                  [SUCCESS]
-            #--> interfaz login (maybe)                                                                                                                                     [SUCCESS]
+           # --> Actulizar App en estacion feeder repair
 #***************************************************************************************************************
 def app():
     '''
@@ -213,7 +208,7 @@ def app():
             if values['-BFC-'] == "OK":
                 Tipo_Feeder = "BFC"
             if values['-HOVER-'] == "OK":
-                Tipo_Feeder = "HO0VER"
+                Tipo_Feeder = "HOOVER"
             id_feeder = values['-INF_FEEDER-'] #toma el valor del ID_FEEDER
             #window['-INF_FEEDER-'].update(id_feeder) #actualiza el input ID_FEEDER
             #copy_id = values['-ID_FEEDER-'] #toma el valor del input ID_FEEDER

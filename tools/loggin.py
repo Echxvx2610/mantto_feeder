@@ -13,13 +13,13 @@ def login():
         [],
         [sg.Image(r'mantto_feeder\img\loggin.png')],
         [sg.VPush()],
-        [sg.Text('Usuario'), sg.Input(key='-USER-',size=(20,1))],
+        [sg.Text(' Usuario\t'), sg.Input(key='-USER-',size=(20,1))],
         [sg.Text('Contraseña'), sg.Input(key='-PASSWORD-', password_char='*',size=(20,1))],
         [sg.Button('Iniciar sesión')],
         [sg.VPush()]
     ]
 
-    window = sg.Window('Inicio de sesión', layout,element_justification='center',size=(300,500),return_keyboard_events=True,icon=r"mantto_feeder\img\mantto.ico")
+    window = sg.Window('Inicio de sesión', layout,element_justification='center',size=(300,400),return_keyboard_events=True,icon=r"mantto_feeder\img\mantto.ico")
 
     # Bucle principal para procesar eventos e interactuar con la interfaz
     while True:
@@ -33,6 +33,7 @@ def login():
             if values['-USER-'] in usuarios and str(values['-PASSWORD-']) == str(usuarios[values['-USER-']]):
                 #sg.popup('Inicio de sesión exitoso')
                 inicio_exitoso = True
+                popup = sg.popup_ok('Inicio de sesión exitoso')
                 break
             else:
                 sg.popup_error('Usuario o contraseña incorrectos')
