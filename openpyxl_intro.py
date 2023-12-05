@@ -165,4 +165,3 @@ celda_interseccion.value = "OK"
 # Guardar y cerrar el archivo
 workbook.save(r"mantto_feeder\openpy_edited.xlsx")
 workbook.close()
-

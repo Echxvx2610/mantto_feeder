@@ -32,7 +32,8 @@ def feeder_status():
         valores = search_feeder.cell_value(int(values['-ID_feeder-']))
         status = search_feeder.search_id(int(values['-ID_feeder-']))
         valor_intercecion = valores[0]
-        if valor_intercecion == "OK":
+        
+        if valor_intercecion == "OK" or valor_intercecion == "P":
             window['-CANVA-'].update(background_color='lawn green')
             window['-STATUS-'].update(status)
             window['-ID_feeder-'].update('')
@@ -43,7 +44,7 @@ def feeder_status():
             window['-ID_feeder-'].update('')
             sg.popup_error('Feeder fuera de registro!!',title=':/')
         else:
-            window['-CANVA-'].update(background_color='lawn green')
+            window['-CANVA-'].update(background_color='gold')
             window['-ID_feeder-'].update('')
             #print(valor_intercecion)
             
@@ -55,7 +56,7 @@ def feeder_status():
         Espera n segundos y actualiza el valor del background_color del canvas siempre y cuando check_status() haya terminado
         '''
         await check_status()
-        window['-CANVA-'].update(background_color='red')
+        window['-CANVA-'].update(background_color='gray')
         await asyncio.sleep(3)
         window['-ID_feeder-'].update('')
         window['-STATUS-'].update('')

@@ -13,7 +13,7 @@ import os
 
 
 #***************************************************\\ ISSUES //***************************************************
-           # --> Actulizar App en estacion feeder repair
+#--> Actulizar App en estacion feeder repair
 #***************************************************************************************************************
 def app():
     '''
@@ -69,10 +69,10 @@ def app():
         [sg.Input(font=('Helvetica',15),key='-INF_FEEDER-', size=(20, 50),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text="N\A",font=('Helvetica',15),key='-color-', size=(10,20),readonly=True,text_color="blue"),sg.Push(),sg.Input(default_text="N\A",font=('Helvetica',15),key='-TECH-',readonly=True,text_color='blue',enable_events=True,size=(35, 50))],
         
         [sg.Text('FEEDER \t\t',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CODIGO',font=('Helvetica',15,'bold')),sg.Push(),sg.Text('CALIBRACION',font=('Helvetica',15,'bold')),sg.Push(),sg.Push(),sg.Push()],
-        [sg.Input(font=('Helvetica',15),key='-DESCRIP-', size=(21, 50),readonly=True,text_color="blue",enable_events=True),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True,text_color="blue"),sg.Push(),sg.Push(),sg.Canvas(background_color='gold',size=(150,50),key='-CANVAC-'),sg.Button('Calibrar',font=('Helvetica',15),size=(7,1),key='-CALIB-',enable_events=True),sg.Button('Reset',font=('Helvetica',15),size=(5,1),key='-RESET-',enable_events=True),sg.Push(),sg.Push(),sg.Push()],
+        [sg.Input(font=('Helvetica',15),key='-DESCRIP-', size=(21, 50),readonly=True,text_color="blue",enable_events=True),sg.Push(),sg.Input(font=('Helvetica',15),key='-DATA-', size=(10, 50),readonly=True,text_color="blue"),sg.Push(),sg.Push(),sg.Canvas(background_color='gray',size=(150,50),key='-CANVAC-'),sg.Button('Calibrar',font=('Helvetica',15),size=(7,1),key='-CALIB-',enable_events=True),sg.Button('Reset',font=('Helvetica',15),size=(5,1),key='-RESET-',enable_events=True),sg.Push(),sg.Push(),sg.Push()],
         
         [sg.Text("Status",font=('Helvetica',15,'bold'))],
-        [sg.Canvas(background_color='gold',size=(800,100),key='-CANVAG-')],
+        [sg.Canvas(background_color='gray',size=(800,100),key='-CANVAG-')],
         
         [sg.HSeparator()],
         [sg.Text("CP",font=('Helvetica',15)),sg.Combo(values=["N/A","OK"],font=('Helvetica',15),size=(5,1),key='-CP-',enable_events=True,readonly=True),sg.Text("\tBFC",font=('Helvetica',15)),sg.Combo(values=["N/A","OK"],font=('Helvetica',15),size=(5,1),key='-BFC-',enable_events=True,readonly=True),sg.Push(),sg.Text("Observaciones:\t\t",font=('Helvetica',15,'bold')),sg.Push()],
@@ -132,7 +132,16 @@ def app():
                     window['-DESCRIP-'].update(descripcion)
                     window['-DATA-'].update(codigo)
                 
-                
+                elif valor_de_celda == "P":
+                    window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
+                    window['-ID_FEEDER-'].update("")
+                    window['-ID_FEEDER-'].update(disabled=True)
+                    window["-CANVAG-"].update(background_color='gold')
+                    window["-CANVAC-"].update(background_color='gold')
+                    window['-color-'].update(color_feeder)
+                    window['-COLORF-'].update(data_fecha)
+                    window['-DESCRIP-'].update(descripcion)
+                    window['-DATA-'].update(codigo)
                 else:
                     window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
                     window['-ID_FEEDER-'].update("")
@@ -162,8 +171,8 @@ def app():
             window['-color-'].update('N\A')
             window['-TECH-'].update('N\A')
             window['-OBS-'].update('')
-            window['-CANVAC-'].update(background_color='gold')
-            window['-CANVAG-'].update(background_color='gold')
+            window['-CANVAC-'].update(background_color='gray')
+            window['-CANVAG-'].update(background_color='gray')
             window['-DATA-'].update('')
             window['-INF_FEEDER-'].update('')
             window['-ID_FEEDER-'].update(text_color='white',disabled=False)
