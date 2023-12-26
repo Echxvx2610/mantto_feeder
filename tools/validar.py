@@ -18,4 +18,4 @@ def user(id_tech:str):
             resultado += item + " "
         return resultado
 
-print(user("015310A"))
+#print(user("015310A"))

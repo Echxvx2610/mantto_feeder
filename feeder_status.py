@@ -33,12 +33,12 @@ def feeder_status():
         status = search_feeder.search_id(int(values['-ID_feeder-']))
         valor_intercecion = valores[0]
         
-        if valor_intercecion == "OK" or valor_intercecion == "P":
+        if valor_intercecion == "OK":
             window['-CANVA-'].update(background_color='lawn green')
             window['-STATUS-'].update(status)
             window['-ID_feeder-'].update('')
             #print(valor_intercecion)
-        elif valor_intercecion == "":
+        elif valor_intercecion == "P" or valor_intercecion == "":
             window['-STATUS-'].update(status)
             window['-CANVA-'].update(background_color='red')
             window['-ID_feeder-'].update('')

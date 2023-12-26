@@ -133,6 +133,7 @@ def cell_value(ID_FEEDER:int):
             return interseccion_fecha, interseccion_color, interseccion_codigo
         except:
             return 0, 0, 0
+        
 def search_fecha(FECHA:str):
     '''
     search_id(ID_FEEDER:int)
@@ -155,6 +156,7 @@ def search_fecha(FECHA:str):
         dia = index_fecha[2]
         color = index_fecha[3]
         return dia, color
+    
 def rellenar_rango_hasta_P(fila, columna_inicio):
     '''
     rellenar_rango_hasta_P(fila, columna_inicio):
@@ -170,8 +172,6 @@ def rellenar_rango_hasta_P(fila, columna_inicio):
             -Verificar si la columna de fin está dentro del rango de la fila
             -Rellena un rango de columnas con OK apartir de la interseccion de la fecha y el id del feeder
             -Al iniciar a rellenar si detecta varias P de manera consecutiva,las cuenta y si son iguales o menores a 15,las sobreescribe y se detiene en la proxima P
-          
-  
     '''
     try:
         # Abrir el archivo CSV en modo lectura
@@ -223,7 +223,7 @@ def rellenar_rango_hasta_P(fila, columna_inicio):
 
 
 #Quitar comentarios para testear
-#print("resultado search_id:\n",search_id(105372777)) #probar funcionamiento de funcion
+#print("resultado search_id:\n",search_id(105372618)) #probar funcionamiento de funcion
 #descripcion = ""
 #for i in search_id(105372953).split()[3:]:
 #    descripcion += i + " "

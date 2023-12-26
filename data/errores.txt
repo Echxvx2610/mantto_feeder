@@ -1,0 +1,1 @@
+2023-12-12 08:36:03 - Error en la función check_status: invalid literal for int() with base 10: 'asdasf45a'

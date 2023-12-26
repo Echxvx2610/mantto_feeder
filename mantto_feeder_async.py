@@ -131,13 +131,12 @@ def app():
                     window['-COLORF-'].update(data_fecha)
                     window['-DESCRIP-'].update(descripcion)
                     window['-DATA-'].update(codigo)
-                
                 elif valor_de_celda == "P":
                     window['-INF_FEEDER-'].update(values['-ID_FEEDER-'])
                     window['-ID_FEEDER-'].update("")
                     window['-ID_FEEDER-'].update(disabled=True)
-                    window["-CANVAG-"].update(background_color='gold')
-                    window["-CANVAC-"].update(background_color='gold')
+                    window["-CANVAG-"].update(background_color='Red')
+                    window["-CANVAC-"].update(background_color='Red')
                     window['-color-'].update(color_feeder)
                     window['-COLORF-'].update(data_fecha)
                     window['-DESCRIP-'].update(descripcion)
@@ -148,8 +147,8 @@ def app():
                     window['-ID_FEEDER-'].update(disabled=True,text_color='blue')
                     window['-color-'].update(color_feeder)
                     window['-COLORF-'].update(data_fecha)
-                    window["-CANVAG-"].update(background_color='red')
-                    window["-CANVAC-"].update(background_color='red')
+                    window["-CANVAG-"].update(background_color='Red')
+                    window["-CANVAC-"].update(background_color='Red')
                     window['-DESCRIP-'].update(descripcion)
                     window['-DATA-'].update(codigo)
                     
@@ -158,7 +157,19 @@ def app():
                 message = """-! El ID del feeder debe ser un valor numerico\n Asegurese de haber introduccido el ID del feeder correctamente!"""
                 asyncio.run(reset())
                 sg.popup(message, title=title)
+            # except Exception as e:
+            #     # Guardar errores o excepciones en un archivo de texto
+            #     with open('mantto_feeder\data\errores.txt', 'a') as file:
+            #         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            #         error_message = f"{timestamp} - Error en la función check_status: {str(e)}\n"
+            #         file.write(error_message)
 
+            #         # Resto del código para manejar la excepción
+            #         title = "Excepcion!"
+            #         message = f"""-! Se ha producido una excepción. Detalles:\n {str(e)}"""
+            #         asyncio.run(reset())
+            #         sg.popup(message, title=title)
+                
             
             
         
@@ -263,8 +274,8 @@ def app():
                 """
                 primer_dato,segundo_dato,tercer_dato,cuarto_dato,quinto_dato,sexto_dato = get_data()[0],get_data()[1],get_data()[2],get_data()[3],get_data()[4],get_data()[5]    
                 if primer_dato == '' or segundo_dato == '' or tercer_dato == '' or cuarto_dato == '' or quinto_dato == '' or sexto_dato == '':
-                    sg.popup_error('Faltan datos por llenar!')
-                    print(get_data()) #revisar que valores tomo la funcion get_data
+                sg.popup_error('Faltan datos por llenar!')
+                print(get_data()) #revisar que valores tomo la funcion get_data
                 """
                 if any(dato == '' for dato in get_data()):
                     sg.popup_error('Faltan datos por llenar!')
@@ -277,8 +288,7 @@ def app():
                     progress.progress_bar()
                     #print(get_data()) #revisar que valores tomo la funcion get_data
                     sg.popup('Reporte generado con exito!')
-                    asyncio.run(reset())
-                    
+                    asyncio.run(reset())  
         except UnboundLocalError:
             title = "Excepcion!"
             message = """-! Ocurrio un error.\nAsegurese de haber introduccido el ID del feeder o haber seleccionado un tipo de feeder"""
@@ -305,7 +315,7 @@ def app():
         
         
             # Ruta al archivo de Excel a abrir
-            archivo_excel = r"C:\Users\CECHEVARRIAMENDOZA\OneDrive - Brunswick Corporation\Documents\Proyectos_Python\PysimpleGUI\Proyectos\mantto_feeder\data\plan feeders SEM.csv"
+            archivo_excel = r"mantto_feeder\data\plan feeders SEM.csv"
             # Comando para abrir el archivo con Excel
             comando_abrir_excel = f'start excel "{archivo_excel}"'
             # Ejecutar el comando para abrir el archivo con Excel
